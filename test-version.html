@@ -813,41 +813,36 @@
 <aside class="sidebar">
   <div class="sidebar-header">
     <div class="logo">
-      <div class="logo-icon" id="logoPlaceholder">
-        <!-- Logo placeholder, replace with your logo SVG or image -->
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
       <span class="logo-text">AI With Puter.js</span>
     </div>
-    <nav class="tab-nav" style="display:flex;gap:8px;margin-top:10px;">
-      <button class="tab-btn" id="tabChat" onclick="switchTab('chat')">Chat</button>
-      <button class="tab-btn" id="tabCode" onclick="switchTab('code')">Coding</button>
-      <button class="tab-btn" id="tabCredits" onclick="switchTab('credits')">Credits</button>
-    </nav>
+    <!-- Model selector moved to prompt area -->
   </div>
-  <div id="tabContentChat">
-    <div style="padding: 8px 10px 4px; font-size:10px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Chats</div>
-    <div class="conv-list" id="convList">
-      <div class="conv-item active" id="conv_0" onclick="switchConv(0)">
-        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <div class="conv-item-text">
-          <span class="conv-title">New chat</span>
-          <span class="conv-model">claude-sonnet-4-5</span>
-        </div>
+
+
+
+  <div class="system-section">
+    <div class="model-label" style="margin-bottom:6px">System Prompt</div>
+    <textarea class="system-textarea" id="systemPrompt" placeholder="You are a helpful assistant…"></textarea>
+  </div>
+
+  <div style="padding: 8px 10px 4px; font-size:10px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Chats</div>
+  <div class="conv-list" id="convList">
+    <div class="conv-item active" id="conv_0" onclick="switchConv(0)">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="conv-item-text">
+        <span class="conv-title">New chat</span>
+        <span class="conv-model">claude-sonnet-4-5</span>
       </div>
     </div>
-    <button class="new-chat-btn" onclick="newChat()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      New conversation
-    </button>
   </div>
-  <div id="tabContentCode" style="display:none;padding:16px;">
-    <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">Code Editor (create apps/sites):</div>
-    <textarea id="codeEditor" style="width:100%;height:300px;background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:13px;border-radius:8px;border:1px solid var(--border2);padding:12px;"></textarea>
-    <button style="margin-top:10px;" onclick="saveAppCode()">Save App/Site</button>
-  </div>
-  <div id="tabContentCredits" style="display:none;padding:16px;">
-    <div id="creditsInfo" style="font-size:13px;color:var(--text2);">Loading credits…</div>
-  </div>
+  <button class="new-chat-btn" onclick="newChat()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    New conversation
+  </button>
+
   <div class="sidebar-footer">
     <div class="status-pill">
       <div class="status-dot"></div>
@@ -885,7 +880,48 @@
 
   <div class="input-area">
     <div class="input-box">
-      <select class="model-select" id="modelSelect" style="max-width:180px;margin:10px 8px 10px 0;"></select>
+      <select class="model-select" id="modelSelect" style="max-width:180px;margin:10px 8px 10px 0;">
+        <!-- Claude -->
+        <optgroup label="Anthropic">
+          <option value="claude-opus-4-5">Claude Opus 4.5</option>
+          <option value="claude-sonnet-4-5" selected>Claude Sonnet 4.5</option>
+          <option value="claude-haiku-4-5">Claude Haiku 4.5</option>
+          <option value="claude-3-7-sonnet">Claude 3.7 Sonnet</option>
+          <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+          <option value="claude-3-opus">Claude 3 Opus</option>
+        </optgroup>
+        <optgroup label="OpenAI">
+          <option value="gpt-4o">GPT-4o</option>
+          <option value="gpt-4o-mini">GPT-4o mini</option>
+          <option value="o1">o1</option>
+          <option value="o1-mini">o1-mini</option>
+          <option value="o3-mini">o3-mini</option>
+        </optgroup>
+        <optgroup label="Google">
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+        </optgroup>
+        <optgroup label="Meta / Llama">
+          <option value="meta-llama/llama-4-maverick">Llama 4 Maverick</option>
+          <option value="meta-llama/llama-4-scout">Llama 4 Scout</option>
+          <option value="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo">Llama 3.1 8B</option>
+          <option value="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo">Llama 3.1 70B</option>
+          <option value="meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo">Llama 3.1 405B</option>
+        </optgroup>
+        <optgroup label="Mistral">
+          <option value="mistral-large-latest">Mistral Large</option>
+          <option value="mistral-small-latest">Mistral Small</option>
+          <option value="codestral-latest">Codestral</option>
+        </optgroup>
+        <optgroup label="DeepSeek">
+          <option value="deepseek-chat">DeepSeek Chat V3</option>
+          <option value="deepseek-reasoner">DeepSeek Reasoner R1</option>
+        </optgroup>
+        <optgroup label="xAI">
+          <option value="grok-beta">Grok Beta</option>
+        </optgroup>
+      </select>
       <textarea class="input-textarea" id="inputMsg" placeholder="Message the AI…" rows="1"></textarea>
       <button class="send-btn" id="sendBtn" onclick="sendMessage()">
         <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -905,12 +941,6 @@
         <span class="token-count" id="charCount">0 chars</span>
       </div>
     </div>
-    <div style="margin-top:8px;font-size:12px;color:var(--text3);font-family:var(--mono);text-align:right;">
-      <span id="creditsUsed">Credits used: --</span>
-    </div>
-    <div style="margin-top:8px;">
-      <textarea class="system-textarea" id="systemPrompt" placeholder="System prompt (optional)…" style="width:100%;margin-top:8px;"></textarea>
-    </div>
   </div>
 </main>
 
@@ -927,50 +957,48 @@ let streaming = true;
 let isGenerating = false;
 let convCounter = 0;
 
+const modelSelect = document.getElementById('modelSelect');
+const systemPrompt = document.getElementById('systemPrompt');
+const inputMsg = document.getElementById('inputMsg');
+const sendBtn = document.getElementById('sendBtn');
+const messagesContainer = document.getElementById('messagesContainer');
+const emptyState = document.getElementById('emptyState');
+const topbarTitle = document.getElementById('topbarTitle');
+const topbarModel = document.getElementById('topbarModel');
+const streamToggle = document.getElementById('streamToggle');
+const tempSlider = document.getElementById('tempSlider');
+const tokensSlider = document.getElementById('tokensSlider');
+const tempVal = document.getElementById('tempVal');
+const tokensVal = document.getElementById('tokensVal');
+const charCount = document.getElementById('charCount');
 
-function getEl(id) { return document.getElementById(id); }
-function getModelSelect() { return getEl('modelSelect'); }
-function getSystemPrompt() { return getEl('systemPrompt'); }
-function getInputMsg() { return getEl('inputMsg'); }
-function getSendBtn() { return getEl('sendBtn'); }
-function getMessagesContainer() { return getEl('messagesContainer'); }
-function getEmptyState() { return getEl('emptyState'); }
-function getTopbarTitle() { return getEl('topbarTitle'); }
-function getTopbarModel() { return getEl('topbarModel'); }
-function getStreamToggle() { return getEl('streamToggle'); }
-function getCharCount() { return getEl('charCount'); }
+if (showFileProtocolWarning()) {
+  showToast('Open via http://localhost to use Puter authentication.');
+}
 
-// Only add event listeners if elements exist (for new layout)
-window.addEventListener('DOMContentLoaded', () => {
-  if (showFileProtocolWarning()) {
-    showToast('Open via http://localhost to use Puter authentication.');
+tempSlider.addEventListener('input', () => tempVal.textContent = tempSlider.value);
+tokensSlider.addEventListener('input', () => tokensVal.textContent = tokensSlider.value);
+modelSelect.addEventListener('change', () => {
+  topbarModel.textContent = modelSelect.value;
+  if (conversations[activeConv]) {
+    conversations[activeConv].model = modelSelect.value;
+    updateConvItem(activeConv, conversations[activeConv].title, modelSelect.value);
   }
-  const modelSelect = getModelSelect();
-  if (modelSelect) {
-    modelSelect.addEventListener('change', () => {
-      getTopbarModel().textContent = modelSelect.value;
-      if (conversations[activeConv]) {
-        conversations[activeConv].model = modelSelect.value;
-        updateConvItem(activeConv, conversations[activeConv].title, modelSelect.value);
-      }
-    });
-  }
-  const inputMsg = getInputMsg();
-  if (inputMsg) {
-    inputMsg.addEventListener('input', () => {
-      getCharCount().textContent = inputMsg.value.length + ' chars';
-      inputMsg.style.height = 'auto';
-      inputMsg.style.height = Math.min(inputMsg.scrollHeight, 200) + 'px';
-    });
-    inputMsg.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    });
-  }
+});
+
+inputMsg.addEventListener('input', () => {
+  charCount.textContent = inputMsg.value.length + ' chars';
+  inputMsg.style.height = 'auto';
+  inputMsg.style.height = Math.min(inputMsg.scrollHeight, 200) + 'px';
+});
+
+inputMsg.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
 
 function toggleStream() {
   streaming = !streaming;
-  getStreamToggle().classList.toggle('on', streaming);
+  streamToggle.classList.toggle('on', streaming);
 }
 
 function showToast(msg) {
@@ -1035,12 +1063,9 @@ function getConv() { return conversations[activeConv]; }
 
 function renderMessages() {
   const conv = getConv();
-  const messagesContainer = getMessagesContainer();
-  const emptyState = getEmptyState();
-  if (!messagesContainer) return;
   messagesContainer.innerHTML = '';
   if (!conv.messages.length) {
-    if (emptyState) messagesContainer.appendChild(emptyState);
+    messagesContainer.appendChild(emptyState);
     return;
   }
   conv.messages.forEach((msg, i) => {
@@ -1124,14 +1149,9 @@ async function sendMessage() {
   }
 
   renderMessages();
-
-  const inputMsg = getInputMsg();
-  const charCount = getCharCount();
-  if (inputMsg) {
-    inputMsg.value = '';
-    inputMsg.style.height = 'auto';
-  }
-  if (charCount) charCount.textContent = '0 chars';
+  inputMsg.value = '';
+  inputMsg.style.height = 'auto';
+  charCount.textContent = '0 chars';
 
   isGenerating = true;
   sendBtn.disabled = true;
@@ -1223,16 +1243,14 @@ async function sendMessage() {
   } finally {
     isGenerating = false;
     sendBtn.disabled = false;
-    if (getInputMsg()) getInputMsg().focus();
+    inputMsg.focus();
   }
 }
 
 function newChat() {
   convCounter++;
-  const modelSelect = getModelSelect();
-  const modelVal = modelSelect ? modelSelect.value : '';
   const id = convCounter;
-  conversations.push({ id, title: 'New chat', messages: [], model: modelVal });
+  conversations.push({ id, title: 'New chat', messages: [], model: modelSelect.value });
   const idx = conversations.length - 1;
   activeConv = idx;
 
@@ -1242,11 +1260,10 @@ function newChat() {
   item.innerHTML = `<svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <div class="conv-item-text">
       <span class="conv-title">New chat</span>
-      <span class="conv-model">${modelVal}</span>
+      <span class="conv-model">${modelSelect.value}</span>
     </div>`;
   item.onclick = () => switchConv(idx);
-  const convList = document.getElementById('convList');
-  if (convList) convList.appendChild(item);
+  document.getElementById('convList').appendChild(item);
 
   switchConv(idx);
 }
@@ -1257,12 +1274,9 @@ function switchConv(idx) {
   if (el) el.classList.add('active');
   activeConv = idx;
   const conv = getConv();
-  const topbarTitle = getTopbarTitle();
-  const topbarModel = getTopbarModel();
-  const modelSelect = getModelSelect();
-  if (topbarTitle) topbarTitle.textContent = conv.title;
-  if (topbarModel) topbarModel.textContent = conv.model || (modelSelect ? modelSelect.value : '');
-  if (modelSelect) modelSelect.value = conv.model || modelSelect.value;
+  topbarTitle.textContent = conv.title;
+  topbarModel.textContent = conv.model || modelSelect.value;
+  modelSelect.value = conv.model || modelSelect.value;
   renderMessages();
 }
 
@@ -1289,120 +1303,6 @@ function copyConversation() {
   const text = conv.messages.map(m => `[${m.role.toUpperCase()}]: ${m.content}`).join('\n\n');
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
 }
-</script>
-<script>
-// --- Tab Switching ---
-function switchTab(tab) {
-  document.getElementById('tabContentChat').style.display = tab === 'chat' ? '' : 'none';
-  document.getElementById('tabContentCode').style.display = tab === 'code' ? '' : 'none';
-  document.getElementById('tabContentCredits').style.display = tab === 'credits' ? '' : 'none';
-  document.getElementById('tabChat').classList.toggle('active', tab === 'chat');
-  document.getElementById('tabCode').classList.toggle('active', tab === 'code');
-  document.getElementById('tabCredits').classList.toggle('active', tab === 'credits');
-  if (tab === 'credits') fetchCredits();
-}
-switchTab('chat');
-
-// --- Dynamic Model Loading ---
-async function loadModels() {
-  const puterClient = getPuter();
-  if (!puterClient || !puterClient.ai) return;
-  let models = [];
-  let providers = [];
-  try {
-    models = await puterClient.ai.listModels();
-    providers = await puterClient.ai.listModelProviders();
-  } catch (e) {
-    // fallback: show error
-    document.getElementById('modelSelect').innerHTML = '<option>Error loading models</option>';
-    return;
-  }
-  // Group models by provider
-  const byProvider = {};
-  models.forEach(m => {
-    const prov = m.provider || 'Other';
-    if (!byProvider[prov]) byProvider[prov] = [];
-    byProvider[prov].push(m);
-  });
-  // Build options
-  let html = '';
-  Object.keys(byProvider).forEach(prov => {
-    html += `<optgroup label="${prov}">`;
-    byProvider[prov].forEach(m => {
-      const mult = m.creditMultiplier ? ` <span style='color:var(--accent2);font-size:10px;'>x${m.creditMultiplier}</span>` : '';
-      html += `<option value="${m.id}">${m.name || m.id}${m.creditMultiplier ? ` (x${m.creditMultiplier})` : ''}</option>`;
-    });
-    html += '</optgroup>';
-  });
-  document.getElementById('modelSelect').innerHTML = html;
-}
-window.addEventListener('DOMContentLoaded', loadModels);
-
-// --- Credits Info ---
-async function fetchCredits() {
-  const puterClient = getPuter();
-  if (!puterClient || !puterClient.auth) return;
-  let info = 'Unable to load credits.';
-  try {
-    // Prefer monthly usage for AI credits
-    const usage = await puterClient.auth.getMonthlyUsage();
-    info = `AI credits used: <b>${usage.creditsUsed}</b> / <b>${usage.creditsLimit}</b><br>Resets: ${usage.resetsAt || 'N/A'}`;
-  } catch (e) {
-    try {
-      const det = await puterClient.auth.getDetailedAppUsage();
-      info = `Storage used: <b>${det.storageUsed}</b> / <b>${det.storageLimit}</b>`;
-    } catch {}
-  }
-  document.getElementById('creditsInfo').innerHTML = info;
-}
-
-// --- Credits Used Below Prompt ---
-async function updateCreditsUsed() {
-  const puterClient = getPuter();
-  if (!puterClient || !puterClient.auth) return;
-  try {
-    const usage = await puterClient.auth.getMonthlyUsage();
-    document.getElementById('creditsUsed').textContent = `Credits used: ${usage.creditsUsed} / ${usage.creditsLimit}`;
-  } catch {
-    document.getElementById('creditsUsed').textContent = 'Credits used: --';
-  }
-}
-setInterval(updateCreditsUsed, 10000); // update every 10s
-updateCreditsUsed();
-
-// --- Save Chat (on clear) ---
-async function clearChat() {
-  const conv = getConv();
-  if (conv.messages.length) {
-    try {
-      const puterClient = getPuter();
-      if (puterClient && puterClient.fs) {
-        await puterClient.fs.write(`/ai-chats/chat_${Date.now()}.json`, JSON.stringify(conv));
-      }
-    } catch (e) { showToast('Failed to save chat: ' + e.message); }
-  }
-  conv.messages = [];
-  conv.title = 'New chat';
-  topbarTitle.textContent = 'New chat';
-  updateConvItem(activeConv, 'New chat');
-  renderMessages();
-}
-
-// --- Save App/Site from Code Editor ---
-async function saveAppCode() {
-  const code = document.getElementById('codeEditor').value;
-  const puterClient = getPuter();
-  if (!puterClient || !puterClient.fs) return showToast('Puter FS not ready');
-  try {
-    await puterClient.fs.write(`/apps/app_${Date.now()}.js`, code);
-    showToast('App/Site saved!');
-  } catch (e) {
-    showToast('Failed to save: ' + e.message);
-  }
-}
-
-// --- Model Input Capabilities (image/video/speech) ---
-// (To be implemented: show clip/mic/cam icons if model supports)
 </script>
 </body>
 </html>
