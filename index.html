@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI With Puter.js</title>
+<script src="https://js.puter.com/v2/" onerror="console.error('Failed to load Puter script.');"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0e11;
+    --bg2: #13151a;
+    --bg3: #1a1d24;
+    --bg4: #22262f;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --text2: #8b90a0;
+    --text3: #555a6a;
+    --accent: #6c8eff;
+    --accent2: #a78bfa;
+    --accent-dim: rgba(108,142,255,0.12);
+    --accent-dim2: rgba(167,139,250,0.1);
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --user-bg: #1e2540;
+    --user-border: rgba(108,142,255,0.25);
+    --ai-bg: #161a21;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --font: 'Sora', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --sidebar: 260px;
+  }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar);
+    min-width: var(--sidebar);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-icon svg { width: 16px; height: 16px; fill: white; }
+
+  .logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .model-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .model-select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b90a0' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+    transition: border-color 0.2s;
+  }
+
+  .model-select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .model-select option { background: #1a1d24; }
+
+  /* Model params */
+  .params-section {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .param-row {
+    margin-bottom: 12px;
+  }
+
+  .param-row:last-child { margin-bottom: 0; }
+
+  .param-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .param-name {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .param-value {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--accent);
+  }
+
+  .param-slider {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+    height: 3px;
+  }
+
+  /* System prompt */
+  .system-section {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .system-textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    resize: none;
+    height: 72px;
+    transition: border-color 0.2s;
+  }
+
+  .system-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .system-textarea::placeholder { color: var(--text3); }
+
+  /* Conversation list */
+  .conv-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 10px;
+  }
+
+  .conv-list::-webkit-scrollbar { width: 3px; }
+  .conv-list::-webkit-scrollbar-track { background: transparent; }
+  .conv-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  .conv-item {
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 12.5px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+  }
+
+  .conv-item:hover { background: var(--bg3); color: var(--text); }
+  .conv-item.active { background: var(--accent-dim); border-color: var(--user-border); color: var(--text); }
+
+  .conv-item svg { width: 13px; height: 13px; stroke: currentColor; fill: none; flex-shrink: 0; opacity: 0.6; }
+  .conv-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .conv-title {
+    font-size: 12px;
+    color: inherit;
+  }
+
+  .conv-model {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+  }
+
+  .new-chat-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    margin: 8px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-size: 12px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.15s;
+    width: calc(100% - 20px);
+  }
+
+  .new-chat-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  .sidebar-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .topbar {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topbar-model-badge {
+    font-size: 11px;
+    font-family: var(--mono);
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--user-border);
+  }
+
+  .topbar-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  .topbar-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text2);
+  }
+
+  .icon-btn:hover { border-color: var(--border2); color: var(--text); background: var(--bg4); }
+  .icon-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; }
+
+  /* ── MESSAGES ── */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .messages::-webkit-scrollbar { width: 4px; }
+  .messages::-webkit-scrollbar-track { background: transparent; }
+  .messages::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  /* Empty state */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    opacity: 0.5;
+    padding: 40px;
+    text-align: center;
+  }
+
+  .empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-icon svg { width: 26px; height: 26px; stroke: var(--text3); fill: none; }
+
+  .empty-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  .empty-sub {
+    font-size: 13px;
+    color: var(--text3);
+    max-width: 320px;
+  }
+
+  /* Message bubbles */
+  .msg-row {
+    display: flex;
+    gap: 12px;
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-row.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--mono);
+    margin-top: 2px;
+  }
+
+  .msg-avatar.ai {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    font-size: 10px;
+    letter-spacing: -0.02em;
+  }
+
+  .msg-avatar.user {
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-size: 10px;
+  }
+
+  .msg-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .msg-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .msg-row.user .msg-meta { flex-direction: row-reverse; }
+
+  .msg-sender {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+  }
+
+  .msg-time {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    opacity: 0.6;
+  }
+
+  .msg-bubble {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .msg-row.user .msg-bubble {
+    background: var(--user-bg);
+    border: 1px solid var(--user-border);
+    border-radius: 12px 4px 12px 12px;
+    float: right;
+  }
+
+  .msg-row.ai .msg-bubble {
+    background: var(--ai-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px 12px 12px 12px;
+  }
+
+  /* Markdown-ish styling inside bubbles */
+  .msg-bubble code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+
+  .msg-bubble pre {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 8px 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .msg-bubble pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+  }
+
+  /* Thinking indicator */
+  .thinking {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 14px;
+    background: var(--ai-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px 12px 12px 12px;
+    display: inline-flex;
+  }
+
+  .thinking-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--text3);
+    animation: pulse 1.2s infinite;
+  }
+
+  .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.9); }
+    40% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* ── INPUT ── */
+  .input-area {
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .input-box {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    transition: border-color 0.2s;
+    overflow: hidden;
+  }
+
+  .input-box:focus-within { border-color: rgba(108,142,255,0.4); }
+
+  .input-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 14px 16px;
+    resize: none;
+    min-height: 48px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .input-textarea:focus { outline: none; }
+  .input-textarea::placeholder { color: var(--text3); }
+
+  .input-textarea::-webkit-scrollbar { width: 3px; }
+  .input-textarea::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  .send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px 8px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    box-shadow: 0 0 0 0 rgba(108,142,255,0.4);
+  }
+
+  .send-btn:hover { transform: scale(1.05); box-shadow: 0 0 12px rgba(108,142,255,0.3); }
+  .send-btn:active { transform: scale(0.96); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .send-btn svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2.5; }
+
+  .input-footer {
+    max-width: 820px;
+    margin: 8px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .input-hint {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+  }
+
+  .token-count {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+  }
+
+  .stream-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .stream-info {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--text3);
+    color: var(--text3);
+    font-size: 10px;
+    font-weight: bold;
+    cursor: help;
+    transition: all 0.2s;
+  }
+
+  .stream-info:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(108, 142, 255, 0.1);
+  }
+
+  .stream-info-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: var(--text);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 1000;
+  }
+
+  .stream-info:hover .stream-info-tooltip {
+    opacity: 1;
+  }
+
+  .stream-info-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--bg3);
+  }
+
+  .toggle {
+    width: 28px;
+    height: 15px;
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    position: relative;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+
+  .toggle.on { background: var(--accent); border-color: var(--accent); }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.2s;
+  }
+
+  .toggle.on::after { transform: translateX(13px); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--mono);
+    padding: 10px 18px;
+    border-radius: 20px;
+    transition: transform 0.3s;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .msg-row.error .msg-bubble {
+    background: var(--red-dim);
+    border-color: rgba(248,113,113,0.5);
+    color: var(--red);
+  }
+
+  .msg-bubble.error {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .copy-error-btn {
+    align-self: flex-start;
+    padding: 5px 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .copy-error-btn:hover {
+    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.08);
+  }
+
+  .file-warning {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 680px;
+    width: calc(100% - 32px);
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(255, 159, 67, 0.14);
+    color: #ffe8c1;
+    border: 1px solid rgba(255, 159, 67, 0.25);
+    font-family: var(--mono);
+    font-size: 13px;
+    z-index: 110;
+    line-height: 1.4;
+  }
+  .file-warning strong { color: #ffd18a; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="logo-text">AI With Puter.js</span>
+    </div>
+    <div class="model-label">Model</div>
+    <select class="model-select" id="modelSelect">
+      <!-- Claude -->
+      <optgroup label="Anthropic">
+        <option value="claude-opus-4-5">Claude Opus 4.5</option>
+        <option value="claude-sonnet-4-5" selected>Claude Sonnet 4.5</option>
+        <option value="claude-haiku-4-5">Claude Haiku 4.5</option>
+        <option value="claude-3-7-sonnet">Claude 3.7 Sonnet</option>
+        <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+        <option value="claude-3-opus">Claude 3 Opus</option>
+      </optgroup>
+      <optgroup label="OpenAI">
+        <option value="gpt-4o">GPT-4o</option>
+        <option value="gpt-4o-mini">GPT-4o mini</option>
+        <option value="o1">o1</option>
+        <option value="o1-mini">o1-mini</option>
+        <option value="o3-mini">o3-mini</option>
+      </optgroup>
+      <optgroup label="Google">
+        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+        <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+      </optgroup>
+      <optgroup label="Meta / Llama">
+        <option value="meta-llama/llama-4-maverick">Llama 4 Maverick</option>
+        <option value="meta-llama/llama-4-scout">Llama 4 Scout</option>
+        <option value="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo">Llama 3.1 8B</option>
+        <option value="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo">Llama 3.1 70B</option>
+        <option value="meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo">Llama 3.1 405B</option>
+      </optgroup>
+      <optgroup label="Mistral">
+        <option value="mistral-large-latest">Mistral Large</option>
+        <option value="mistral-small-latest">Mistral Small</option>
+        <option value="codestral-latest">Codestral</option>
+      </optgroup>
+      <optgroup label="DeepSeek">
+        <option value="deepseek-chat">DeepSeek Chat V3</option>
+        <option value="deepseek-reasoner">DeepSeek Reasoner R1</option>
+      </optgroup>
+      <optgroup label="xAI">
+        <option value="grok-beta">Grok Beta</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <div class="params-section">
+    <div class="param-row">
+      <div class="param-header">
+        <span class="param-name">Temperature</span>
+        <span class="param-value" id="tempVal">0.7</span>
+      </div>
+      <input type="range" class="param-slider" id="tempSlider" min="0" max="2" step="0.05" value="0.7">
+    </div>
+    <div class="param-row">
+      <div class="param-header">
+        <span class="param-name">Max Tokens</span>
+        <span class="param-value" id="tokensVal">2048</span>
+      </div>
+      <input type="range" class="param-slider" id="tokensSlider" min="128" max="8192" step="128" value="2048">
+    </div>
+  </div>
+
+  <div class="system-section">
+    <div class="model-label" style="margin-bottom:6px">System Prompt</div>
+    <textarea class="system-textarea" id="systemPrompt" placeholder="You are a helpful assistant…"></textarea>
+  </div>
+
+  <div style="padding: 8px 10px 4px; font-size:10px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Chats</div>
+  <div class="conv-list" id="convList">
+    <div class="conv-item active" id="conv_0" onclick="switchConv(0)">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="conv-item-text">
+        <span class="conv-title">New chat</span>
+        <span class="conv-model">claude-sonnet-4-5</span>
+      </div>
+    </div>
+  </div>
+  <button class="new-chat-btn" onclick="newChat()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    New conversation
+  </button>
+
+  <div class="sidebar-footer">
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      puter.js ready
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-title" id="topbarTitle">New chat</span>
+      <span class="topbar-model-badge" id="topbarModel">claude-sonnet-4-5</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="icon-btn" title="Copy conversation" onclick="copyConversation()">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </div>
+      <div class="icon-btn" title="Clear chat" onclick="clearChat()">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="messages" id="messagesContainer">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      </div>
+      <div class="empty-title">Start a conversation</div>
+      <div class="empty-sub">Select a model and type your message to begin. Puter.js handles auth automatically.</div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-box">
+      <textarea class="input-textarea" id="inputMsg" placeholder="Message the AI…" rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="input-footer">
+      <span class="input-hint">↵ send &nbsp;·&nbsp; shift+↵ newline</span>
+      <div style="display:flex;align-items:center;gap:14px">
+        <label class="stream-toggle" onclick="toggleStream()">
+          <div class="toggle on" id="streamToggle"></div>
+          streaming
+          <div class="stream-info">
+            ?
+            <div class="stream-info-tooltip">Receive responses word-by-word in real-time</div>
+          </div>
+        </label>
+        <span class="token-count" id="charCount">0 chars</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer style="padding: 8px 16px; border-top: 1px solid var(--border); background: var(--bg2); text-align: center; font-size: 11px; color: var(--text3); font-family: var(--mono);">
+  Powered by <a href="https://puter.com" target="_blank" style="color: var(--accent); text-decoration: none;">Puter.js</a>
+</footer>
+
+<script>
+let conversations = [{ id: 0, title: 'New chat', messages: [], model: 'claude-sonnet-4-5' }];
+let activeConv = 0;
+let streaming = true;
+let isGenerating = false;
+let convCounter = 0;
+
+const modelSelect = document.getElementById('modelSelect');
+const systemPrompt = document.getElementById('systemPrompt');
+const inputMsg = document.getElementById('inputMsg');
+const sendBtn = document.getElementById('sendBtn');
+const messagesContainer = document.getElementById('messagesContainer');
+const emptyState = document.getElementById('emptyState');
+const topbarTitle = document.getElementById('topbarTitle');
+const topbarModel = document.getElementById('topbarModel');
+const streamToggle = document.getElementById('streamToggle');
+const tempSlider = document.getElementById('tempSlider');
+const tokensSlider = document.getElementById('tokensSlider');
+const tempVal = document.getElementById('tempVal');
+const tokensVal = document.getElementById('tokensVal');
+const charCount = document.getElementById('charCount');
+
+if (showFileProtocolWarning()) {
+  showToast('Open via http://localhost to use Puter authentication.');
+}
+
+tempSlider.addEventListener('input', () => tempVal.textContent = tempSlider.value);
+tokensSlider.addEventListener('input', () => tokensVal.textContent = tokensSlider.value);
+modelSelect.addEventListener('change', () => {
+  topbarModel.textContent = modelSelect.value;
+  if (conversations[activeConv]) {
+    conversations[activeConv].model = modelSelect.value;
+    updateConvItem(activeConv, conversations[activeConv].title, modelSelect.value);
+  }
+});
+
+inputMsg.addEventListener('input', () => {
+  charCount.textContent = inputMsg.value.length + ' chars';
+  inputMsg.style.height = 'auto';
+  inputMsg.style.height = Math.min(inputMsg.scrollHeight, 200) + 'px';
+});
+
+inputMsg.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+function toggleStream() {
+  streaming = !streaming;
+  streamToggle.classList.toggle('on', streaming);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function getPuter() {
+  return window.puter || window.Puter || window.globalThis?.puter || window.globalThis?.Puter;
+}
+
+function showFileProtocolWarning() {
+  if (location.protocol === 'file:') {
+    const warning = document.createElement('div');
+    warning.className = 'file-warning';
+    warning.innerHTML = `
+      <strong>Running from a local file may break Puter auth.</strong> Please serve this page with a local web server (for example, <code>python3 -m http.server</code>) and open it via <code>http://localhost:8000</code> instead of <code>file://</code>.
+    `;
+    document.body.appendChild(warning);
+    sendBtn.disabled = true;
+    return true;
+  }
+  return false;
+}
+
+function isAsyncIterable(value) {
+  return value && typeof value[Symbol.asyncIterator] === 'function';
+}
+
+function copyErrorText(errorText) {
+  navigator.clipboard.writeText(errorText).then(() => {
+    showToast('Error copied to clipboard');
+  }).catch(() => {
+    showToast('Unable to copy error');
+  });
+}
+
+function createErrorBubble(errorText) {
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble error';
+
+  const text = document.createElement('div');
+  text.innerHTML = `⚠ ${escapeHtml(errorText)}`;
+  bubble.appendChild(text);
+
+  const copyBtn = document.createElement('button');
+  copyBtn.type = 'button';
+  copyBtn.className = 'copy-error-btn';
+  copyBtn.textContent = 'Copy error';
+  copyBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    copyErrorText(errorText);
+  });
+  bubble.appendChild(copyBtn);
+
+  return bubble;
+}
+
+function getConv() { return conversations[activeConv]; }
+
+function renderMessages() {
+  const conv = getConv();
+  messagesContainer.innerHTML = '';
+  if (!conv.messages.length) {
+    messagesContainer.appendChild(emptyState);
+    return;
+  }
+  conv.messages.forEach((msg, i) => {
+    messagesContainer.appendChild(createMsgEl(msg, i));
+  });
+  scrollToBottom();
+}
+
+function createMsgEl(msg, idx) {
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + msg.role;
+  row.id = 'msg_' + idx;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar ' + msg.role;
+  avatar.textContent = msg.role === 'ai' ? 'AI' : 'You';
+
+  const content = document.createElement('div');
+  content.className = 'msg-content';
+
+  const meta = document.createElement('div');
+  meta.className = 'msg-meta';
+  meta.innerHTML = `<span class="msg-sender">${msg.role === 'ai' ? msg.model || 'assistant' : 'you'}</span><span class="msg-time">${msg.time}</span>`;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.innerHTML = formatContent(msg.content);
+
+  content.appendChild(meta);
+  content.appendChild(bubble);
+  row.appendChild(avatar);
+  row.appendChild(content);
+  return row;
+}
+
+function formatContent(text) {
+  // Basic markdown-ish rendering
+  return text
+    .replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) =>
+      `<pre><code>${escapeHtml(code.trim())}</code></pre>`)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function scrollToBottom() {
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function now() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+async function sendMessage() {
+  const text = inputMsg.value.trim();
+  if (!text || isGenerating) return;
+
+  const conv = getConv();
+  const model = conv.model || modelSelect.value;
+  const puterClient = getPuter();
+  if (!puterClient) {
+    showToast('Puter failed to load. Check your network or script source.');
+    isGenerating = false;
+    sendBtn.disabled = false;
+    return;
+  }
+
+  // Add user message
+  if (emptyState.parentNode) emptyState.remove();
+  conv.messages.push({ role: 'user', content: text, time: now() });
+  conv.model = model;
+  if (conv.title === 'New chat') {
+    conv.title = text.slice(0, 30) + (text.length > 30 ? '…' : '');
+    topbarTitle.textContent = conv.title;
+    updateConvItem(activeConv, conv.title);
+  }
+
+  renderMessages();
+  inputMsg.value = '';
+  inputMsg.style.height = 'auto';
+  charCount.textContent = '0 chars';
+
+  isGenerating = true;
+  sendBtn.disabled = true;
+
+  // Build thinking bubble
+  const thinkIdx = conv.messages.length;
+  const thinkRow = document.createElement('div');
+  thinkRow.className = 'msg-row ai';
+  thinkRow.id = 'thinking_row';
+  thinkRow.innerHTML = `
+    <div class="msg-avatar ai">AI</div>
+    <div class="msg-content">
+      <div class="msg-meta"><span class="msg-sender">${model}</span><span class="msg-time">${now()}</span></div>
+      <div class="thinking"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div>
+    </div>`;
+  messagesContainer.appendChild(thinkRow);
+  scrollToBottom();
+
+  try {
+    const history = conv.messages.map(m => ({
+      role: m.role === 'ai' ? 'assistant' : 'user',
+      content: m.content
+    }));
+
+    const sys = systemPrompt.value.trim();
+
+    let fullText = '';
+
+    if (streaming) {
+      const response = await puterClient.ai.chat(history, {
+        model,
+        stream: true,
+        ...(sys ? { system: sys } : {}),
+      });
+
+      // Create bubble for streaming or fallback to full response
+      thinkRow.querySelector('.thinking').outerHTML;
+      thinkRow.querySelector('.msg-content').innerHTML = `
+        <div class="msg-meta"><span class="msg-sender">${model}</span><span class="msg-time">${now()}</span></div>
+        <div class="msg-bubble" id="stream_bubble"></div>`;
+      const bubble = document.getElementById('stream_bubble');
+
+      if (isAsyncIterable(response)) {
+        for await (const part of response) {
+          const chunk = part?.text ?? part?.delta?.text ?? '';
+          if (chunk) {
+            fullText += chunk;
+            bubble.innerHTML = formatContent(fullText);
+            scrollToBottom();
+          }
+        }
+      } else {
+        fullText = response?.message?.content?.[0]?.text
+                || response?.text
+                || response?.content
+                || String(response);
+        bubble.innerHTML = formatContent(fullText);
+        scrollToBottom();
+      }
+    } else {
+      const response = await puterClient.ai.chat(history, {
+        model,
+        ...(sys ? { system: sys } : {}),
+      });
+      fullText = response?.message?.content?.[0]?.text
+              || response?.text
+              || response?.content
+              || String(response);
+
+      thinkRow.querySelector('.msg-content').innerHTML = `
+        <div class="msg-meta"><span class="msg-sender">${model}</span><span class="msg-time">${now()}</span></div>
+        <div class="msg-bubble">${formatContent(fullText)}</div>`;
+    }
+
+    thinkRow.id = 'msg_' + thinkIdx;
+    conv.messages.push({ role: 'ai', content: fullText, time: now(), model });
+    scrollToBottom();
+
+  } catch (err) {
+    thinkRow.classList.add('error');
+    thinkRow.querySelector('.thinking')?.remove?.();
+    const content = thinkRow.querySelector('.msg-content');
+    content.innerHTML = `
+      <div class="msg-meta"><span class="msg-sender">${model}</span><span class="msg-time">${now()}</span></div>`;
+    const errorText = err.message || String(err);
+    content.appendChild(createErrorBubble(errorText));
+    showToast('Error: ' + (err.message || 'request failed'));
+    scrollToBottom();
+  } finally {
+    isGenerating = false;
+    sendBtn.disabled = false;
+    inputMsg.focus();
+  }
+}
+
+function newChat() {
+  convCounter++;
+  const id = convCounter;
+  conversations.push({ id, title: 'New chat', messages: [], model: modelSelect.value });
+  const idx = conversations.length - 1;
+  activeConv = idx;
+
+  const item = document.createElement('div');
+  item.className = 'conv-item';
+  item.id = 'conv_' + idx;
+  item.innerHTML = `<svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <div class="conv-item-text">
+      <span class="conv-title">New chat</span>
+      <span class="conv-model">${modelSelect.value}</span>
+    </div>`;
+  item.onclick = () => switchConv(idx);
+  document.getElementById('convList').appendChild(item);
+
+  switchConv(idx);
+}
+
+function switchConv(idx) {
+  document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('conv_' + idx);
+  if (el) el.classList.add('active');
+  activeConv = idx;
+  const conv = getConv();
+  topbarTitle.textContent = conv.title;
+  topbarModel.textContent = conv.model || modelSelect.value;
+  modelSelect.value = conv.model || modelSelect.value;
+  renderMessages();
+}
+
+function updateConvItem(idx, title, model) {
+  const el = document.getElementById('conv_' + idx);
+  if (!el) return;
+  const titleEl = el.querySelector('.conv-title');
+  const modelEl = el.querySelector('.conv-model');
+  if (titleEl) titleEl.textContent = title;
+  if (model !== undefined && modelEl) modelEl.textContent = model;
+}
+
+function clearChat() {
+  const conv = getConv();
+  conv.messages = [];
+  conv.title = 'New chat';
+  topbarTitle.textContent = 'New chat';
+  updateConvItem(activeConv, 'New chat');
+  renderMessages();
+}
+
+function copyConversation() {
+  const conv = getConv();
+  const text = conv.messages.map(m => `[${m.role.toUpperCase()}]: ${m.content}`).join('\n\n');
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+}
+</script>
+</body>
+</html>
