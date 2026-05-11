@@ -190,10 +190,6 @@ body {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  flex-shrink: 0;
-}
-
-.sidebar-section {
   padding: 10px 12px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -1418,11 +1414,6 @@ body {
       </div>
     </div>
 
-    <div class="sidebar-section">
-      <div class="section-label">System Prompt</div>
-      <textarea class="system-textarea" id="systemPrompt" placeholder="You are a helpful assistant…"></textarea>
-    </div>
-
     <div style="padding: 7px 8px 3px 12px; font-size:9.5px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0;">Conversations</div>
 
     <div class="conv-list" id="convList">
@@ -1728,8 +1719,6 @@ const MODEL_GROUPS = [
 ];
 
 // ─── DOM REFS ────────────────────────────────────────────────────────────────
-const modelSelect    = document.getElementById('modelSelect');
-const systemPrompt   = document.getElementById('systemPrompt');
 const inputMsg       = document.getElementById('inputMsg');
 const sendBtn        = document.getElementById('sendBtn');
 const messagesContainer = document.getElementById('messagesContainer');
@@ -1957,7 +1946,7 @@ async function sendMessage() {
         }
       }
 
-      const sys = systemPrompt.value.trim();
+      const sys = '';
       const opts = { model, stream: streaming };
       if (sys) opts.system = sys;
 
@@ -2044,7 +2033,7 @@ function getConv() { return conversations[activeConv]; }
 function newChat() {
   convCounter++;
   const id = convCounter;
-  const model = modelSelect.value;
+  const model = currentModel;
   conversations.push({ id, title: 'New chat', messages: [], model });
   const idx = conversations.length - 1;
   activeConv = idx;
@@ -2347,7 +2336,7 @@ function buildProviderSection(label, models) {
     </div>
     <div class="models-grid" id="grid_${label.replace(/\s/g,'_')}"></div>`;
   const grid = sec.querySelector('.models-grid');
-  const currentModel = modelSelect.value;
+  const currentModel = currentModel;
 
   models.forEach(m => {
     const cap = MODEL_CAPS[m.id] || {};
