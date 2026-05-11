@@ -613,32 +613,6 @@ body {
   gap: 8px;
 }
 
-.input-model-selector {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.input-model-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 9px;
-  border-radius: 6px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  font-family: var(--mono);
-  font-size: 10.5px;
-  cursor: pointer;
-  transition: all 0.12s;
-  white-space: nowrap;
-}
-
-.input-model-btn:hover { border-color: var(--border2); color: var(--text); }
-.input-model-btn svg { width: 10px; height: 10px; stroke: currentColor; fill: none; }
-
 .input-actions-left { display: flex; align-items: center; gap: 4px; }
 .input-actions-right { display: flex; align-items: center; gap: 6px; }
 
@@ -1427,10 +1401,14 @@ body {
         </div>
       </div>
     </div>
-    <div class="sidebar-section">
+    <div class="sidebar-section" id="modelSection">
       <div class="section-label">Model</div>
-      <div class="model-selector-wrap">
-        <select class="model-select" id="modelSelect" onchange="onModelChange()"></select>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+        <span id="sidebarModelName" style="font-family:var(--mono);font-size:11px;color:var(--accent);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</span>
+        <button class="small-btn" onclick="switchTab('models')" style="flex-shrink:0;">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Models
+        </button>
       </div>
       <div class="model-capability-badges" id="modelCapBadges">
         <span class="cap-badge active" id="capChat">chat</span>
@@ -1505,11 +1483,6 @@ body {
                 <button class="input-icon-btn" id="imgUploadBtn" title="Upload image" onclick="document.getElementById('imageFileInput').click()" disabled>
                   <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                 </button>
-              </div>
-              <div class="input-model-btn" id="inputModelBtn" onclick="document.getElementById('modelSelect').focus()">
-                <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-                <span id="inputModelName">—</span>
-                <svg viewBox="0 0 24 24" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
               </div>
             </div>
 
@@ -1766,33 +1739,26 @@ const topbarModel    = document.getElementById('topbarModel');
 const streamToggle   = document.getElementById('streamToggle');
 const charCount      = document.getElementById('charCount');
 const imgUploadBtn   = document.getElementById('imgUploadBtn');
-const inputModelName = document.getElementById('inputModelName');
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
-function buildModelSelect() {
-  modelSelect.innerHTML = '';
-  MODEL_GROUPS.forEach(g => {
-    const grp = document.createElement('optgroup');
-    grp.label = g.label;
-    g.models.forEach(m => {
-      const cap = MODEL_CAPS[m.id] || {};
-      const opt = document.createElement('option');
-      opt.value = m.id;
-      const multi = cap.multiplier ? ` [${cap.multiplier}]` : '';
-      opt.textContent = m.name + multi;
-      if (m.id === 'claude-sonnet-4-5') opt.selected = true;
-      grp.appendChild(opt);
-    });
-    modelSelect.appendChild(grp);
-  });
+let currentModel = 'claude-sonnet-4-5';
+
+function setCurrentModel(id) {
+  currentModel = id;
+  topbarModel.textContent = id;
+  document.getElementById('sidebarModelName').textContent = shortModelName(id);
+  updateCapBadges(id);
+  if (conversations[activeConv]) {
+    conversations[activeConv].model = id;
+    updateConvItem(activeConv, conversations[activeConv].title, id);
+  }
 }
 
-buildModelSelect();
-conversations[0].model = modelSelect.value;
-document.getElementById('convModel_0').textContent = modelSelect.value;
-topbarModel.textContent = modelSelect.value;
-inputModelName.textContent = shortModelName(modelSelect.value);
-updateCapBadges(modelSelect.value);
+setCurrentModel(currentModel);
+conversations[0].model = currentModel;
+document.getElementById('convModel_0').textContent = currentModel;
+topbarModel.textContent = currentModel;
+updateCapBadges(currentModel);
 
 // File protocol warning
 if (location.protocol === 'file:') {
@@ -1841,17 +1807,6 @@ function switchTab(tab) {
 }
 
 // ─── MODEL CHANGE ────────────────────────────────────────────────────────────
-function onModelChange() {
-  const m = modelSelect.value;
-  topbarModel.textContent = m;
-  inputModelName.textContent = shortModelName(m);
-  updateCapBadges(m);
-  if (conversations[activeConv]) {
-    conversations[activeConv].model = m;
-    updateConvItem(activeConv, conversations[activeConv].title, m);
-  }
-}
-
 function shortModelName(id) {
   const parts = id.split('/');
   const last = parts[parts.length - 1];
@@ -1919,7 +1874,7 @@ async function sendMessage() {
   if ((!text && pendingImages.length === 0) || isGenerating) return;
 
   const conv = getConv();
-  const model = conv.model || modelSelect.value;
+  const model = conv.model || currentModel;
   const cap = MODEL_CAPS[model] || {};
   const puterClient = getPuter();
 
@@ -2116,8 +2071,8 @@ function switchConv(idx) {
   activeConv = idx;
   const conv = getConv();
   topbarTitle.textContent = conv.title;
-  topbarModel.textContent = conv.model || modelSelect.value;
-  if (conv.model) { modelSelect.value = conv.model; updateCapBadges(conv.model); inputModelName.textContent = shortModelName(conv.model); }
+  topbarModel.textContent = conv.model || currentModel;
+  if (conv.model) { setCurrentModel(conv.model); }
   renderMessages();
 }
 
@@ -2418,8 +2373,7 @@ function buildProviderSection(label, models) {
 }
 
 function selectModel(id) {
-  modelSelect.value = id;
-  onModelChange();
+  setCurrentModel(id);
   switchTab('chat');
   showToast('Model set to ' + id);
 }
@@ -2641,7 +2595,7 @@ async function askCodeAI() {
   const userMsg = `Current file (${activeCodeFile}):\n\`\`\`\n${currentCode}\n\`\`\`\n\nRequest: ${prompt}`;
 
   try {
-    const model = modelSelect.value;
+  const model = currentModel;
     const resp = await p.ai.chat([{ role: 'user', content: userMsg }], {
       model,
       system: sys,
