@@ -1392,42 +1392,45 @@ body {
 </head>
 <body>
 
-<!-- ─── GLOBAL TOPBAR ─── -->
-<div class="topbar-global">
-  <div class="logo-area">
-    <div class="logo-mark" id="logoMark">
-      <!-- Swap this div for an <img src="logo.svg"> when you have a logo -->
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-    </div>
-    <span class="logo-name">Puter<span>AI</span> Studio</span>
-  </div>
+<!-- ─── APP BODY ─── -->
+<div class="app-body">
 
-  <nav class="tab-nav">
-    <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')">
-      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Chat
-    </button>
-    <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
-      <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      Coding
-    </button>
-    <button class="tab-btn" id="tabModels" onclick="switchTab('models')">
-      <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-      Models
-    </button>
-    <button class="tab-btn" id="tabUsage" onclick="switchTab('usage')">
-      <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-      Usage
-    </button>
-  </nav>
-
-  <div class="topbar-right">
-    <div class="status-pill" id="statusPill">
-      <div class="status-dot loading" id="statusDot"></div>
-      <span id="statusText">loading…</span>
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <!-- Itens da antiga topbar-global movidos para o topo da sidebar -->
+    <div style="padding: 18px 12px 10px 12px; border-bottom: 1px solid var(--border);">
+      <div class="logo-area" style="margin-bottom: 12px;">
+        <div class="logo-mark" id="logoMark">
+          <!-- Swap this div for an <img src='logo.svg'> when you have a logo -->
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="logo-name">Puter<span>AI</span> Studio</span>
+      </div>
+      <nav class="tab-nav" style="margin-bottom: 10px;">
+        <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Chat
+        </button>
+        <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Coding
+        </button>
+        <button class="tab-btn" id="tabModels" onclick="switchTab('models')">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Models
+        </button>
+        <button class="tab-btn" id="tabUsage" onclick="switchTab('usage')">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          Usage
+        </button>
+      </nav>
+      <div class="status-pill" id="statusPill">
+        <div class="status-dot loading" id="statusDot"></div>
+        <span id="statusText">loading…</span>
+      </div>
     </div>
-  </div>
-</div>
+
+    <!-- Resto da sidebar original -->
 
 <!-- ─── APP BODY ─── -->
 <div class="app-body">
