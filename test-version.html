@@ -1392,12 +1392,9 @@ body {
 </head>
 <body>
 
-<!-- ─── APP BODY ─── -->
 <div class="app-body">
 
-  <!-- ─── SIDEBAR ─── -->
   <aside class="sidebar">
-    <!-- Itens da antiga topbar-global movidos para o topo da sidebar -->
     <div style="padding: 18px 12px 0 12px; border-bottom: 1px solid var(--border);">
       <div class="logo-area" style="margin-bottom: 18px; justify-content: flex-start;">
         <div class="logo-mark" id="logoMark">
@@ -1406,7 +1403,7 @@ body {
         <span class="logo-name">Puter<span>AI</span> Studio</span>
       </div>
       <div class="sidebar-nav-col" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
-        <button class="tab-btn" id="tabChat" style="width: 100%; justify-content: flex-start;" onclick="switchTab('chat')">
+        <button class="tab-btn active" id="tabChat" style="width: 100%; justify-content: flex-start;" onclick="switchTab('chat')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Chat
         </button>
@@ -1430,14 +1427,6 @@ body {
         </div>
       </div>
     </div>
-
-    <!-- Resto da sidebar original -->
-
-<!-- ─── APP BODY ─── -->
-<div class="app-body">
-
-  <!-- ─── SIDEBAR ─── -->
-  <aside class="sidebar">
     <div class="sidebar-section">
       <div class="section-label">Model</div>
       <div class="model-selector-wrap">
