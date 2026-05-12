@@ -1,6 +1,7 @@
 # AI-With-Puter
 
 This this a fashion open-source project using [puter.js](https://docs.puter.com/) for the AI models.
+As I heavely used [Claude](https://claude.ai) the site's gui is based on it
 
 You can open the AI chat at [AI-With-Puter](https://ai-with-puter.netlify.app/) or at the [Puter.com app](https://puter.com/app/ai-with-puter)
 
