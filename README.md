@@ -1,5 +1,7 @@
 # AI-With-Puter
 
-I'm lazy so the site is vibe-coded (i made this thing for fun)
+This this a fashion open-source project using [puter.js](https://docs.puter.com/) for the AI models.
 
-credits to claude (mainly) and alot of other AIs for when i runned out of credits and Puter
+You can open the AI chat at [AI-With-Puter](https://ai-with-puter.netlify.app/) or at the [Puter.com app](https://puter.com/app/ai-with-puter)
+
+Running from a local file may break [Puter auth](https://docs.puter.com/Auth/). Serve via python3 -m http.server and open http://localhost:8000, or just go to one of the listed link above.
