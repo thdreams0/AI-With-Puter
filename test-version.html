@@ -1355,6 +1355,20 @@ body {
 
 .gen-image-container img:hover { transform: scale(1.02); }
 
+/* Settings sliders */
+input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; outline: none; cursor: pointer; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); cursor: pointer; }
+
+.setting-info {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid var(--text3); color: var(--text3);
+  font-size: 10px; font-family: var(--mono); font-weight: 700;
+  cursor: pointer; transition: all 0.12s; flex-shrink: 0; line-height: 1;
+}
+.setting-info:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
 /* Light theme */
 body.light {
   --bg:       #f5f5f4;
@@ -1410,6 +1424,10 @@ body.light .preview-iframe { background: white; }
         <button class="tab-btn" id="tabUsage" style="width: 100%; justify-content: flex-start;" onclick="switchTab('usage')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
           Usage
+        </button>
+        <button class="tab-btn" id="tabSettings" style="width: 100%; justify-content: flex-start;" onclick="switchTab('settings')">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
         </button>
       </div>
       </div>
@@ -1645,6 +1663,95 @@ body.light .preview-iframe { background: white; }
       </div>
     </div>
 
+    <!-- SETTINGS -->
+    <div class="panel-view" id="panelSettings">
+      <div class="usage-panel" id="settingsPanelContent">
+        <div class="usage-header">
+          <h2>Settings</h2>
+          <p>Configure AI model parameters for your conversations.</p>
+        </div>
+
+        <div class="usage-section-title">System Prompt</div>
+        <div class="usage-grid" style="grid-template-columns:1fr;">
+          <div class="usage-card" style="padding:16px 18px;">
+            <textarea id="sysPromptInput" placeholder="You are a helpful assistant…" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:13px;padding:10px;border-radius:8px;resize:vertical;min-height:80px;outline:none;" oninput="onSysPromptChange()"></textarea>
+          </div>
+        </div>
+
+        <div class="usage-section-title">Generation Parameters</div>
+        <div class="usage-grid" style="grid-template-columns:1fr;">
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Temperature</div>
+                <span class="setting-info" onclick="showToast('Controls randomness: lower values (near 0) make output more deterministic and focused, higher values (near 2) make it more creative and unpredictable.')" title="What is Temperature?">?</span>
+              </div>
+              <span id="tempValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0.7</span>
+            </div>
+            <input type="range" id="tempSlider" min="0" max="2" step="0.05" value="0.7" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0 (precise)</span><span>2 (creative)</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Max Tokens</div>
+                <span class="setting-info" onclick="showToast('Maximum number of tokens the AI can generate in a single response. Higher values allow longer responses but cost more credits.')" title="What are Max Tokens?">?</span>
+              </div>
+              <span id="maxtokValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">4096</span>
+            </div>
+            <input type="range" id="maxtokSlider" min="256" max="8192" step="256" value="4096" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>256</span><span>8192</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Top P</div>
+                <span class="setting-info" onclick="showToast('Nucleus sampling: considers tokens with top_p probability mass. Lower values make output more focused. 0.9 is a good default.')" title="What is Top P?">?</span>
+              </div>
+              <span id="toppValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0.9</span>
+            </div>
+            <input type="range" id="toppSlider" min="0" max="1" step="0.05" value="0.9" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0</span><span>1</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Frequency Penalty</div>
+                <span class="setting-info" onclick="showToast('Penalizes repeated tokens based on their frequency. Higher values reduce repetition in the output.')" title="What is Frequency Penalty?">?</span>
+              </div>
+              <span id="freqValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0</span>
+            </div>
+            <input type="range" id="freqSlider" min="0" max="2" step="0.1" value="0" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0 (none)</span><span>2 (strict)</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Presence Penalty</div>
+                <span class="setting-info" onclick="showToast('Penalizes tokens that have already appeared. Higher values encourage the model to talk about new topics.')" title="What is Presence Penalty?">?</span>
+              </div>
+              <span id="presValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0</span>
+            </div>
+            <input type="range" id="presSlider" min="0" max="2" step="0.1" value="0" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0 (none)</span><span>2 (strict)</span></div>
+          </div>
+
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <button class="small-btn" onclick="resetSettings()" style="border-color:var(--border2);">
+            <svg viewBox="0 0 24 24" stroke-width="1.5" style="width:12px;height:12px;stroke:currentColor;fill:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Reset to defaults
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /.main-panel -->
 </div><!-- /.app-body -->
 
@@ -1672,6 +1779,79 @@ let convCounter = 0;
 let pendingImages = []; // { dataUrl, base64, mimeType }
 let currentTab = 'chat';
 let puterReady = false;
+
+// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+const SETTINGS_DEFAULTS = { temperature: 0.7, max_tokens: 4096, top_p: 0.9, frequency_penalty: 0, presence_penalty: 0, system_prompt: '' };
+let appSettings = { ...SETTINGS_DEFAULTS };
+const SETTINGS_FS_PATH = 'puterai-studio/settings.json';
+
+async function loadSettings() {
+  // Try Puter FS first, fallback to localStorage
+  const p = getPuter();
+  let saved = null;
+  if (p) {
+    try { const f = await p.fs.read(SETTINGS_FS_PATH); if (f) saved = await f.text(); } catch (e) {}
+  }
+  if (!saved) { try { saved = localStorage.getItem('ai-puter-settings'); } catch (e) {} }
+  if (saved) {
+    try { appSettings = { ...SETTINGS_DEFAULTS, ...JSON.parse(saved) }; } catch (e) {}
+  }
+  applySettingsToUI();
+}
+
+function applySettingsToUI() {
+  const els = ['tempSlider', 'maxtokSlider', 'toppSlider', 'freqSlider', 'presSlider'];
+  const keys = ['temperature', 'max_tokens', 'top_p', 'frequency_penalty', 'presence_penalty'];
+  els.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.value = appSettings[keys[i]];
+  });
+  const sysEl = document.getElementById('sysPromptInput');
+  if (sysEl) sysEl.value = appSettings.system_prompt || '';
+  updateSettingsDisplay();
+}
+
+async function saveSettings() {
+  const json = JSON.stringify(appSettings);
+  try { localStorage.setItem('ai-puter-settings', json); } catch (e) {}
+  const p = getPuter();
+  if (p) {
+    try { await p.fs.write(SETTINGS_FS_PATH, json, { createMissingParents: true }); } catch (e) { console.warn('Settings FS save failed:', e); }
+  }
+}
+
+function updateSettingsDisplay() {
+  const vals = {
+    tempSlider: 'tempValue', maxtokSlider: 'maxtokValue', toppSlider: 'toppValue',
+    freqSlider: 'freqValue', presSlider: 'presValue'
+  };
+  const keys = { tempSlider: 'temperature', maxtokSlider: 'max_tokens', toppSlider: 'top_p',
+    freqSlider: 'frequency_penalty', presSlider: 'presence_penalty' };
+  Object.entries(vals).forEach(([sliderId, displayId]) => {
+    const slider = document.getElementById(sliderId);
+    const display = document.getElementById(displayId);
+    if (slider && display) {
+      display.textContent = slider.value;
+      appSettings[keys[sliderId]] = parseFloat(slider.value);
+    }
+  });
+  saveSettings();
+}
+
+function onSysPromptChange() {
+  const el = document.getElementById('sysPromptInput');
+  appSettings.system_prompt = el ? el.value : '';
+  saveSettings();
+}
+
+async function resetSettings() {
+  appSettings = { ...SETTINGS_DEFAULTS };
+  await saveSettings();
+  applySettingsToUI();
+  showToast('Settings reset to defaults');
+}
+
+loadSettings();
 
 // Code editor state
 let codeFiles = {
@@ -1756,9 +1936,9 @@ const MODEL_GROUPS = [
   ]},
 ];
 
-// Cheapest model helper (prefers vision-capable)
+// Cheapest model helper (prefers vision-capable, defaults to gpt-4o-mini)
 function getCheapestModel() {
-  let cheapest = 'gemini-2.0-flash';
+  let cheapest = 'gpt-4o-mini';
   let minMul = Infinity;
   for (const [id, cap] of Object.entries(MODEL_CAPS)) {
     if (!cap.vision) continue;
@@ -2038,9 +2218,13 @@ async function sendMessage() {
         }
       }
 
-      const sys = '';
       const opts = { model, stream: streaming };
-      if (sys) opts.system = sys;
+      if (appSettings.temperature !== undefined) opts.temperature = appSettings.temperature;
+      if (appSettings.max_tokens) opts.max_tokens = appSettings.max_tokens;
+      if (appSettings.top_p !== undefined) opts.top_p = appSettings.top_p;
+      if (appSettings.frequency_penalty) opts.frequency_penalty = appSettings.frequency_penalty;
+      if (appSettings.presence_penalty) opts.presence_penalty = appSettings.presence_penalty;
+      if (appSettings.system_prompt) opts.system = appSettings.system_prompt;
 
       if (streaming) {
         const response = await puterClient.ai.chat(history, opts);
