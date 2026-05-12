@@ -1583,12 +1583,41 @@ body.light .preview-iframe { background: white; }
     <div class="panel-view" id="panelModels">
       <div class="models-panel" id="modelsPanelContent">
         <div class="models-header">
-          <h2>Model Discovery</h2>
-          <p>Browse available AI models and providers. Click a model to use it in chat.</p>
+          <h2>Models</h2>
+          <p>Browse and filter available AI models.</p>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+            <input type="text" id="modelSearch" placeholder="Search models…" oninput="renderFilteredModels()" style="flex:1;min-width:160px;padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:12px;outline:none;">
+            <select id="filterProvider" onchange="renderFilteredModels()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;">
+              <option value="">All Providers</option>
+              <option value="Anthropic">Anthropic</option>
+              <option value="OpenAI">OpenAI</option>
+              <option value="Google">Google</option>
+              <option value="Meta / Llama">Meta / Llama</option>
+              <option value="Mistral">Mistral</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="xAI">xAI</option>
+            </select>
+            <select id="filterMultiplier" onchange="renderFilteredModels()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;">
+              <option value="">All Multipliers</option>
+              <option value="0.05">0.05×</option>
+              <option value="0.1">0.1×</option>
+              <option value="0.15">0.15×</option>
+              <option value="0.2">0.2×</option>
+              <option value="0.25">0.25×</option>
+              <option value="0.3">0.3×</option>
+              <option value="0.5">0.5×</option>
+              <option value="1">1×</option>
+              <option value="2">2×</option>
+              <option value="3">3×</option>
+              <option value="5">5×</option>
+              <option value="15">15×</option>
+              <option value="img">Image Gen</option>
+            </select>
+          </div>
         </div>
         <div class="loading-text" id="modelsLoading">
           <div class="spinner"></div>
-          Loading models from Puter…
+          Loading models…
         </div>
         <div id="modelsContent" style="display:none"></div>
       </div>
@@ -1727,6 +1756,25 @@ const MODEL_GROUPS = [
   ]},
 ];
 
+// Cheapest model helper (prefers vision-capable)
+function getCheapestModel() {
+  let cheapest = 'gemini-2.0-flash';
+  let minMul = Infinity;
+  for (const [id, cap] of Object.entries(MODEL_CAPS)) {
+    if (!cap.vision) continue;
+    const mul = parseFloat(String(cap.multiplier || '1').replace('×', ''));
+    if (mul > 0 && mul < minMul) { minMul = mul; cheapest = id; }
+  }
+  if (minMul === Infinity) {
+    for (const [id, cap] of Object.entries(MODEL_CAPS)) {
+      const mul = parseFloat(String(cap.multiplier || '1').replace('×', ''));
+      if (mul > 0 && mul < minMul) { minMul = mul; cheapest = id; }
+    }
+  }
+  return cheapest;
+}
+const DEFAULT_MODEL = getCheapestModel();
+
 // ─── DOM REFS ────────────────────────────────────────────────────────────────
 const inputMsg       = document.getElementById('inputMsg');
 const sendBtn        = document.getElementById('sendBtn');
@@ -1824,7 +1872,7 @@ function switchTab(tab) {
   document.querySelectorAll('.panel-view').forEach(p => p.classList.remove('active'));
   document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 
-  if (tab === 'models' && !document.getElementById('modelsContent').innerHTML.trim()) loadModels();
+  if (tab === 'models') { if (!document.getElementById('modelsContent').innerHTML.trim()) loadModels(); else renderFilteredModels(); }
   if (tab === 'usage') loadUsage();
 }
 
@@ -1889,7 +1937,7 @@ async function sendMessage() {
   if (activeConv === -1) {
     convCounter++;
     const id = convCounter;
-    conversations.push({ id, title: 'New chat', messages: [], model: 'claude-sonnet-4-5' });
+    conversations.push({ id, title: 'New chat', messages: [], model: DEFAULT_MODEL });
     activeConv = conversations.length - 1;
     const item = document.createElement('div');
     item.className = 'conv-item';
@@ -1898,7 +1946,7 @@ async function sendMessage() {
       <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <div class="conv-item-text">
         <span class="conv-title">New chat</span>
-        <span class="conv-model" id="convModel_${activeConv}">claude-sonnet-4-5</span>
+        <span class="conv-model" id="convModel_${activeConv}">${DEFAULT_MODEL}</span>
       </div>
       <div class="conv-delete-btn" onclick="deleteConv(event,${activeConv})" title="Delete">×</div>`;
     item.addEventListener('click', (e) => { if (!e.target.classList.contains('conv-delete-btn')) switchConv(activeConv); });
@@ -1907,7 +1955,7 @@ async function sendMessage() {
   }
 
   const conv = getConv();
-  const model = conv.model || 'claude-sonnet-4-5';
+  const model = conv.model || DEFAULT_MODEL;
   const cap = MODEL_CAPS[model] || {};
   const puterClient = getPuter();
 
@@ -2077,7 +2125,7 @@ function getConv() { return conversations[activeConv]; }
 function newChat() {
   convCounter++;
   const id = convCounter;
-  const model = 'claude-sonnet-4-5';
+  const model = DEFAULT_MODEL;
   conversations.push({ id, title: 'New chat', messages: [], model });
   const idx = conversations.length - 1;
   activeConv = idx;
@@ -2104,7 +2152,7 @@ function switchConv(idx) {
   activeConv = idx;
   const conv = getConv();
   topbarTitle.textContent = conv.title;
-  topbarModel.textContent = conv.model || 'claude-sonnet-4-5';
+  topbarModel.textContent = conv.model || DEFAULT_MODEL;
   renderMessages();
 }
 
@@ -2326,6 +2374,8 @@ async function saveCodeFiles() {
 }
 
 // ─── MODELS PANEL ────────────────────────────────────────────────────────────
+let allModelData = [];
+
 async function loadModels() {
   const loading = document.getElementById('modelsLoading');
   const content = document.getElementById('modelsContent');
@@ -2350,28 +2400,24 @@ async function loadModels() {
   loading.style.display = 'none';
   content.style.display = 'block';
 
-  // If we got dynamic models from Puter, merge/display them
+  allModelData = [];
   if (dynamicModels && Array.isArray(dynamicModels) && dynamicModels.length > 0) {
-    // Group by provider
-    const byProvider = {};
     dynamicModels.forEach(m => {
       const prov = m.provider || m.id?.split('/')[0] || 'Other';
-      if (!byProvider[prov]) byProvider[prov] = [];
-      byProvider[prov].push(m);
-    });
-
-    Object.entries(byProvider).forEach(([prov, models]) => {
-      content.appendChild(buildProviderSection(prov, models.map(m => ({
-        id: m.id || m.name,
-        name: m.name || m.id,
-      }))));
+      allModelData.push({ id: m.id || m.name, name: m.name || m.id, provider: prov });
     });
   } else {
-    // Static fallback
     MODEL_GROUPS.forEach(g => {
-      content.appendChild(buildProviderSection(g.label, g.models));
+      g.models.forEach(m => allModelData.push({ id: m.id, name: m.name, provider: g.label }));
     });
   }
+
+  renderFilteredModels();
+
+  // Populate provider filter with actual providers from data
+  const provFilter = document.getElementById('filterProvider');
+  const uniqueProvs = [...new Set(allModelData.map(m => m.provider))].sort();
+  provFilter.innerHTML = '<option value="">All Providers</option>' + uniqueProvs.map(p => `<option value="${p}">${p}</option>`).join('');
 
   if (providers && Array.isArray(providers) && providers.length > 0) {
     const provSection = document.createElement('div');
@@ -2381,6 +2427,40 @@ async function loadModels() {
         ${providers.map(pr => `<div style="padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;font-family:var(--mono);font-size:11px;color:var(--text2)">${pr.name || pr}</div>`).join('')}
       </div>`;
     content.appendChild(provSection);
+  }
+}
+
+function renderFilteredModels() {
+  const content = document.getElementById('modelsContent');
+  const search = (document.getElementById('modelSearch').value || '').toLowerCase();
+  const providerFilter = document.getElementById('filterProvider').value;
+  const multFilter = document.getElementById('filterMultiplier').value;
+
+  let filtered = allModelData.filter(m => {
+    if (search && !m.name.toLowerCase().includes(search) && !m.id.toLowerCase().includes(search)) return false;
+    if (providerFilter && m.provider !== providerFilter) return false;
+    if (multFilter) {
+      const cap = MODEL_CAPS[m.id] || {};
+      const mul = String(cap.multiplier || '').replace('×', '');
+      if (mul !== multFilter) return false;
+    }
+    return true;
+  });
+
+  // Group by provider
+  const byProvider = {};
+  filtered.forEach(m => {
+    if (!byProvider[m.provider]) byProvider[m.provider] = [];
+    byProvider[m.provider].push(m);
+  });
+
+  content.innerHTML = '';
+  Object.entries(byProvider).forEach(([prov, models]) => {
+    content.appendChild(buildProviderSection(prov, models));
+  });
+
+  if (filtered.length === 0) {
+    content.innerHTML = '<div class="loading-text" style="margin-top:20px;color:var(--text3);justify-content:center;">No models match your filters.</div>';
   }
 }
 
@@ -2394,12 +2474,12 @@ function buildProviderSection(label, models) {
     </div>
     <div class="models-grid" id="grid_${label.replace(/\s/g,'_')}"></div>`;
   const grid = sec.querySelector('.models-grid');
-  const currentModel = 'claude-sonnet-4-5';
+  const currentModel = DEFAULT_MODEL;
 
   models.forEach(m => {
     const cap = MODEL_CAPS[m.id] || {};
     const card = document.createElement('div');
-    card.className = 'model-card' + (m.id === 'claude-sonnet-4-5' ? ' selected' : '');
+    card.className = 'model-card' + (m.id === DEFAULT_MODEL ? ' selected' : '');
     const caps = [];
     if (cap.vision) caps.push('<span class="cap-badge vision active">vision</span>');
     if (cap.imageGen) caps.push('<span class="cap-badge image-gen active">img-gen</span>');
@@ -2462,26 +2542,44 @@ async function loadUsage() {
     </div>`;
   content.appendChild(accountSection);
 
-  // Storage
+  // Fetch usage data from Puter
+  let monthly = null;
+  let detailed = null;
   let diskUsage = null;
+
+  try {
+    if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
+  } catch (e) { console.warn('getMonthlyUsage:', e); }
+  try {
+    if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
+  } catch (e) { console.warn('getDetailedAppUsage:', e); }
   try {
     if (typeof p.fs?.usage === 'function') diskUsage = await p.fs.usage();
     else if (typeof p.fs?.diskUsage === 'function') diskUsage = await p.fs.diskUsage();
   } catch (e) { console.warn('diskUsage:', e); }
 
-  if (diskUsage) {
-    const used = diskUsage.used || diskUsage.size || 0;
-    const total = diskUsage.capacity || diskUsage.total || 1;
-    const pct = Math.min(100, Math.round((used / total) * 100));
-    const usedMB = (used / 1048576).toFixed(1);
-    const totalMB = (total / 1048576).toFixed(1);
-
+  // Storage - try detailed first, fallback to fs.usage
+  let storageUsed = null, storageTotal = null;
+  if (detailed && typeof detailed === 'object') {
+    storageUsed = detailed.storage_used ?? detailed.total_storage ?? detailed.disk_used ?? null;
+    storageTotal = detailed.storage_limit ?? detailed.storage_capacity ?? detailed.disk_limit ?? null;
+  }
+  if (storageUsed === null && diskUsage) {
+    storageUsed = diskUsage.used ?? diskUsage.size ?? 0;
+    storageTotal = diskUsage.capacity ?? diskUsage.total ?? 1;
+  }
+  if (storageUsed !== null) {
+    const usedBytes = parseInt(storageUsed);
+    const totalBytes = parseInt(storageTotal || 1);
+    const pct = Math.min(100, Math.round((usedBytes / totalBytes) * 100));
+    const usedMB = (usedBytes / 1048576).toFixed(1);
+    const totalMB = (totalBytes / 1048576).toFixed(1);
     const storageSection = document.createElement('div');
     storageSection.innerHTML = `
       <div class="usage-section-title">Storage</div>
       <div class="usage-grid">
         <div class="usage-card">
-          <div class="usage-card-label">Cloud Storage Used</div>
+          <div class="usage-card-label">Cloud Storage</div>
           <div class="usage-card-value ${pct > 80 ? 'orange' : 'accent'}">${pct}%</div>
           <div class="usage-card-sub">${usedMB} MB of ${totalMB} MB</div>
           <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
@@ -2492,56 +2590,84 @@ async function loadUsage() {
     content.appendChild(storageSection);
   }
 
-  // AI Credits
-  let monthly = null;
-  let detailed = null;
-  try {
-    if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
-  } catch (e) { console.warn('getMonthlyUsage:', e); }
-  try {
-    if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
-  } catch (e) { console.warn('getDetailedAppUsage:', e); }
-
-  if (monthly || detailed) {
+  // AI Credits - try detailed first, fallback to monthly
+  const limit = 0.25;
+  let creditUsed = null;
+  if (detailed && typeof detailed === 'object') {
+    creditUsed = parseFloat(detailed.total_credits ?? detailed.credits_used ?? detailed.credit_usage ?? null);
+  }
+  if ((creditUsed === null || isNaN(creditUsed)) && monthly) {
+    if (typeof monthly === 'object') {
+      creditUsed = parseFloat(monthly.used ?? monthly.amount ?? monthly.total_credits ?? null);
+    } else if (typeof monthly === 'number') {
+      creditUsed = monthly;
+    } else if (typeof monthly === 'string') {
+      creditUsed = parseFloat(monthly);
+    }
+  }
+  if (creditUsed !== null && !isNaN(creditUsed)) {
+    const pct = Math.min(100, Math.round((creditUsed / limit) * 100));
+    const remaining = Math.max(0, limit - creditUsed);
     const creditsSection = document.createElement('div');
-    let creditsHtml = '<div class="usage-section-title">AI Credits</div><div class="usage-grid">';
-
-    if (monthly && typeof monthly === 'object') {
-      const used = monthly.used || monthly.amount || 0;
-      const total = monthly.total || monthly.limit || monthly.amount || 1;
-      const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
-      creditsHtml += `
+    creditsSection.innerHTML = `
+      <div class="usage-section-title">AI Credits (Free Tier)</div>
+      <div class="usage-grid">
         <div class="usage-card">
-          <div class="usage-card-label">Monthly Usage</div>
-          <div class="usage-card-value ${pct > 80 ? 'orange' : 'green'}">${pct}%</div>
-          <div class="usage-card-sub">${used} / ${total} credits</div>
+          <div class="usage-card-label">Monthly Credits</div>
+          <div class="usage-card-value ${pct > 80 ? 'orange' : 'green'}">$${creditUsed.toFixed(3)}</div>
+          <div class="usage-card-sub">$${remaining.toFixed(3)} remaining of $${limit.toFixed(2)} · ${pct}% used</div>
           <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
             <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
           </div>
-        </div>`;
-    }
-
-    if (detailed) {
-      const totalTokens = detailed.totalTokens || detailed.total_credits || 0;
-      const totalRequests = detailed.totalRequests || detailed.total_calls || 0;
-      if (totalTokens || totalRequests) {
-        creditsHtml += `
-          <div class="usage-card">
-            <div class="usage-card-label">Total Requests</div>
-            <div class="usage-card-value accent">${totalRequests.toLocaleString()}</div>
-            <div class="usage-card-sub">${totalTokens.toLocaleString()} tokens consumed</div>
-          </div>`;
-      }
-    }
-
-    creditsHtml += '</div>';
-    creditsSection.innerHTML = creditsHtml;
+        </div>
+      </div>`;
     content.appendChild(creditsSection);
+  }
+
+  // Detailed extra info (requests, tokens, models)
+  if (detailed && typeof detailed === 'object') {
+    const extraCards = [];
+    const totalTokens = detailed.totalTokens ?? detailed.tokens ?? 0;
+    const totalRequests = detailed.totalRequests ?? detailed.requests ?? detailed.total_calls ?? 0;
+    const appName = detailed.app ?? detailed.app_name ?? null;
+    const models = detailed.models ?? detailed.by_model ?? null;
+
+    if (totalTokens || totalRequests) {
+      extraCards.push(`
+        <div class="usage-card">
+          <div class="usage-card-label">API Requests</div>
+          <div class="usage-card-value accent">${(totalRequests || 0).toLocaleString()}</div>
+          <div class="usage-card-sub">${(totalTokens || 0).toLocaleString()} tokens</div>
+        </div>`);
+    }
+
+    if (appName) {
+      extraCards.push(`
+        <div class="usage-card">
+          <div class="usage-card-label">App</div>
+          <div class="usage-card-value accent" style="font-size:16px;">${escapeHtml(appName)}</div>
+        </div>`);
+    }
+
+    if (extraCards.length > 0) {
+      const extraSection = document.createElement('div');
+      extraSection.innerHTML = `<div class="usage-section-title">Details</div><div class="usage-grid">${extraCards.join('')}</div>`;
+      content.appendChild(extraSection);
+    }
   }
 
   // Session stats
   const localStats = buildLocalStats();
   content.appendChild(localStats);
+
+  // Puter dashboard link
+  const dashLink = document.createElement('div');
+  dashLink.style.cssText = 'margin-top:20px;text-align:center;';
+  dashLink.innerHTML = `<a href="https://puter.com/dashboard#usage" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;text-decoration:none;transition:all 0.15s;background:var(--bg3);" onmouseover="this.style.borderColor='var(--text3)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+    <svg viewBox="0 0 24 24" stroke-width="1.5" style="width:14px;height:14px;stroke:currentColor;fill:none;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    View full dashboard on Puter
+  </a>`;
+  content.appendChild(dashLink);
 }
 
 function buildLocalStats() {
@@ -2700,7 +2826,7 @@ async function askCodeAI() {
   const userMsg = `Current file (${activeCodeFile}):\n\`\`\`\n${currentCode}\n\`\`\`\n\nRequest: ${prompt}`;
 
   try {
-  const model = 'claude-sonnet-4-5';
+  const model = DEFAULT_MODEL;
     const resp = await p.ai.chat([{ role: 'user', content: userMsg }], {
       model,
       system: sys,
