@@ -1481,22 +1481,14 @@ body.light .preview-iframe { background: white; }
           </div>
         </div>
       </div>
-
-      <!-- Image upload file input (hidden) -->
-      <input type="file" id="imageFileInput" accept="image/*" multiple style="display:none" onchange="handleImageUpload(event)">
-
+      
       <div class="input-area">
         <div class="input-box-wrap">
           <div class="input-box" id="inputBox">
             <div class="input-toolbar">
               <div class="input-actions-left">
-                <button class="input-icon-btn" id="imgUploadBtn" title="Upload image" onclick="document.getElementById('imageFileInput').click()" disabled>
-                  <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                </button>
               </div>
             </div>
-
-            <div id="imagePreviews" class="image-preview-strip" style="display:none"></div>
 
             <textarea class="input-textarea" id="inputMsg" placeholder="Message the AI…" rows="1"></textarea>
 
@@ -1776,7 +1768,6 @@ let activeConv = -1;
 let streaming = true;
 let isGenerating = false;
 let convCounter = 0;
-let pendingImages = []; // { dataUrl, base64, mimeType }
 let currentTab = 'chat';
 let puterReady = false;
 
@@ -1936,20 +1927,13 @@ const MODEL_GROUPS = [
   ]},
 ];
 
-// Cheapest model helper (prefers vision-capable, defaults to gpt-4o-mini)
+// Cheapest model helper
 function getCheapestModel() {
-  let cheapest = 'gpt-4o-mini';
+  let cheapest = 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo';
   let minMul = Infinity;
   for (const [id, cap] of Object.entries(MODEL_CAPS)) {
-    if (!cap.vision) continue;
     const mul = parseFloat(String(cap.multiplier || '1').replace('×', ''));
     if (mul > 0 && mul < minMul) { minMul = mul; cheapest = id; }
-  }
-  if (minMul === Infinity) {
-    for (const [id, cap] of Object.entries(MODEL_CAPS)) {
-      const mul = parseFloat(String(cap.multiplier || '1').replace('×', ''));
-      if (mul > 0 && mul < minMul) { minMul = mul; cheapest = id; }
-    }
   }
   return cheapest;
 }
@@ -1964,7 +1948,6 @@ const topbarTitle    = document.getElementById('topbarTitle');
 const topbarModel    = document.getElementById('topbarModel');
 const streamToggle   = document.getElementById('streamToggle');
 const charCount      = document.getElementById('charCount');
-const imgUploadBtn   = document.getElementById('imgUploadBtn');
 
 // ─── GREETING ─────────────────────────────────────────────────────────────────
 function setGreeting() {
@@ -2007,6 +1990,14 @@ function toggleTheme() {
     if (icon) icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
   }
 })();
+
+// Prevent Puter.js from intercepting paste (causes clipboard errors)
+document.addEventListener('paste', function(e) {
+  // Allow normal paste but stop Puter from handling it
+  if (e.target && (e.target.id === 'inputMsg' || e.target.closest('.input-box'))) {
+    e.stopPropagation();
+  }
+}, true);
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 topbarTitle.textContent = 'AI With Puter';
@@ -2080,38 +2071,11 @@ function toggleStream() {
 }
 
 // ─── IMAGE UPLOAD ─────────────────────────────────────────────────────────
-function handleImageUpload(e) {
-  const files = Array.from(e.target.files);
-  const strip = document.getElementById('imagePreviews');
-  strip.style.display = 'flex';
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const dataUrl = ev.target.result;
-      const base64 = dataUrl.split(',')[1];
-      const mimeType = file.type;
-      pendingImages.push({ dataUrl, base64, mimeType });
-
-      const item = document.createElement('div');
-      item.className = 'image-preview-item';
-      item.innerHTML = `<img src="${dataUrl}"><div class="image-preview-remove" onclick="removePendingImage(this, '${pendingImages.length - 1}')">×</div>`;
-      strip.appendChild(item);
-    };
-    reader.readAsDataURL(file);
-  });
-  e.target.value = '';
-}
-
-function removePendingImage(el, idx) {
-  pendingImages.splice(parseInt(idx), 1);
-  el.parentElement.remove();
-  if (pendingImages.length === 0) document.getElementById('imagePreviews').style.display = 'none';
-}
 
 // ─── SEND MESSAGE ────────────────────────────────────────────────────────────
 async function sendMessage() {
   const text = inputMsg.value.trim();
-  if ((!text && pendingImages.length === 0) || isGenerating) return;
+  if (!text || isGenerating) return;
 
   // Auto-create conversation if none active
   if (activeConv === -1) {
@@ -2141,20 +2105,14 @@ async function sendMessage() {
 
   if (!puterClient) { showToast('Puter.js not loaded.'); return; }
 
-  // Collect images for message
-  const images = [...pendingImages];
-  pendingImages = [];
-  document.getElementById('imagePreviews').innerHTML = '';
-  document.getElementById('imagePreviews').style.display = 'none';
-
-  const userContent = text + (images.length ? ` [${images.length} image(s)]` : '');
+  const userContent = text;
   if (emptyState.parentNode) emptyState.remove();
 
-  conv.messages.push({ role: 'user', content: userContent, time: now(), images });
+  conv.messages.push({ role: 'user', content: userContent, time: now() });
   conv.model = model;
 
   if (conv.title === 'New chat') {
-    conv.title = (text || 'Image message').slice(0, 32) + ((text.length > 32) ? '…' : '');
+    conv.title = text.slice(0, 32) + ((text.length > 32) ? '…' : '');
     topbarTitle.textContent = conv.title;
     updateConvItem(activeConv, conv.title);
   }
@@ -2200,19 +2158,7 @@ async function sendMessage() {
       const history = [];
       for (const m2 of conv.messages) {
         if (m2.role === 'user') {
-          if (m2.images && m2.images.length > 0 && cap.vision) {
-            // Multi-modal content
-            const parts = [];
-            m2.images.forEach(img => {
-              parts.push({ type: 'image_url', image_url: { url: `data:${img.mimeType};base64,${img.base64}` } });
-            });
-            if (m2.content.replace(/ \[\d+ image\(s\)\]$/, '').trim())
-              parts.push({ type: 'text', text: m2.content.replace(/ \[\d+ image\(s\)\]$/, '').trim() });
-            history.push({ role: 'user', content: parts });
-          } else {
-            const cleanText = m2.content.replace(/ \[\d+ image\(s\)\]$/, '').trim() || '(image)';
-            history.push({ role: 'user', content: cleanText });
-          }
+          history.push({ role: 'user', content: m2.content });
         } else {
           history.push({ role: 'assistant', content: m2.content });
         }
@@ -2435,21 +2381,8 @@ function createMsgEl(msg, idx) {
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
 
-  // Show images if any
-  if (msg.images && msg.images.length > 0) {
-    const imgStrip = document.createElement('div');
-    imgStrip.className = 'gen-image-container';
-    msg.images.forEach(img => {
-      const imgEl = document.createElement('img');
-      imgEl.src = img.dataUrl;
-      imgEl.style.maxWidth = '120px';
-      imgStrip.appendChild(imgEl);
-    });
-    bubble.appendChild(imgStrip);
-  }
-
   const textNode = document.createElement('span');
-  const cleanContent = msg.content.replace(/ \[\d+ image\(s\)\]$/, '').trim();
+  const cleanContent = msg.content;
   textNode.innerHTML = formatContent(cleanContent);
   bubble.appendChild(textNode);
 
