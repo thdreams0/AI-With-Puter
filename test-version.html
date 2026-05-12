@@ -2444,76 +2444,104 @@ async function loadUsage() {
     return;
   }
 
-  let monthly = null;
-  let detailed = null;
+  loader.style.display = 'none';
+
+  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
+  const username = p.user?.username || '';
+
+  // Account info
+  const accountSection = document.createElement('div');
+  accountSection.innerHTML = `
+    <div class="usage-section-title">Account</div>
+    <div class="usage-grid">
+      <div class="usage-card">
+        <div class="usage-card-label">Status</div>
+        <div class="usage-card-value ${signedIn ? 'green' : 'orange'}">${signedIn ? 'Signed In' : 'Not Signed In'}</div>
+        <div class="usage-card-sub">${signedIn ? (username ? 'Logged in as ' + username : 'Authenticated with Puter') : 'Sign in to sync across devices'}</div>
+      </div>
+    </div>`;
+  content.appendChild(accountSection);
+
+  // Storage
   let diskUsage = null;
-
-  try {
-    if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
-  } catch (e) { console.warn('getMonthlyUsage:', e); }
-
-  try {
-    if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
-  } catch (e) { console.warn('getDetailedAppUsage:', e); }
-
   try {
     if (typeof p.fs?.usage === 'function') diskUsage = await p.fs.usage();
     else if (typeof p.fs?.diskUsage === 'function') diskUsage = await p.fs.diskUsage();
   } catch (e) { console.warn('diskUsage:', e); }
 
-  loader.style.display = 'none';
-
-  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
-
-  if (!signedIn && !monthly && !detailed) {
-    content.innerHTML = `
-      <div class="loading-text" style="color:var(--text3)">
-        Not signed in. <a href="#" onclick="showToast(\\'Click the Puter logo to sign in\\');return false;" style="color:var(--accent)">Sign in</a> to save chats and view usage.<br><br>
-        Local session stats are shown below.
-      </div>`;
-  }
-
-  // Storage card
   if (diskUsage) {
     const used = diskUsage.used || diskUsage.size || 0;
     const total = diskUsage.capacity || diskUsage.total || 1;
     const pct = Math.min(100, Math.round((used / total) * 100));
-    const storageCard = document.createElement('div');
-    storageCard.innerHTML = `
+    const usedMB = (used / 1048576).toFixed(1);
+    const totalMB = (total / 1048576).toFixed(1);
+
+    const storageSection = document.createElement('div');
+    storageSection.innerHTML = `
       <div class="usage-section-title">Storage</div>
       <div class="usage-grid">
         <div class="usage-card">
-          <div class="usage-card-label">Storage Used</div>
-          <div class="usage-card-value accent">${pct}%</div>
-          <div class="usage-card-sub">${(used / 1048576).toFixed(1)} MB / ${(total / 1048576).toFixed(1)} MB</div>
+          <div class="usage-card-label">Cloud Storage Used</div>
+          <div class="usage-card-value ${pct > 80 ? 'orange' : 'accent'}">${pct}%</div>
+          <div class="usage-card-sub">${usedMB} MB of ${totalMB} MB</div>
+          <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
+          </div>
         </div>
       </div>`;
-    content.appendChild(storageCard);
+    content.appendChild(storageSection);
   }
 
-  // Always show local session stats
+  // AI Credits
+  let monthly = null;
+  let detailed = null;
+  try {
+    if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
+  } catch (e) { console.warn('getMonthlyUsage:', e); }
+  try {
+    if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
+  } catch (e) { console.warn('getDetailedAppUsage:', e); }
+
+  if (monthly || detailed) {
+    const creditsSection = document.createElement('div');
+    let creditsHtml = '<div class="usage-section-title">AI Credits</div><div class="usage-grid">';
+
+    if (monthly && typeof monthly === 'object') {
+      const used = monthly.used || monthly.amount || 0;
+      const total = monthly.total || monthly.limit || monthly.amount || 1;
+      const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
+      creditsHtml += `
+        <div class="usage-card">
+          <div class="usage-card-label">Monthly Usage</div>
+          <div class="usage-card-value ${pct > 80 ? 'orange' : 'green'}">${pct}%</div>
+          <div class="usage-card-sub">${used} / ${total} credits</div>
+          <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
+          </div>
+        </div>`;
+    }
+
+    if (detailed) {
+      const totalTokens = detailed.totalTokens || detailed.total_credits || 0;
+      const totalRequests = detailed.totalRequests || detailed.total_calls || 0;
+      if (totalTokens || totalRequests) {
+        creditsHtml += `
+          <div class="usage-card">
+            <div class="usage-card-label">Total Requests</div>
+            <div class="usage-card-value accent">${totalRequests.toLocaleString()}</div>
+            <div class="usage-card-sub">${totalTokens.toLocaleString()} tokens consumed</div>
+          </div>`;
+      }
+    }
+
+    creditsHtml += '</div>';
+    creditsSection.innerHTML = creditsHtml;
+    content.appendChild(creditsSection);
+  }
+
+  // Session stats
   const localStats = buildLocalStats();
   content.appendChild(localStats);
-
-  if (monthly) {
-    const card = document.createElement('div');
-    card.innerHTML = '<div class="usage-section-title">Monthly Usage (from Puter API)</div>';
-    const pre = document.createElement('pre');
-    pre.style.cssText = 'font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;white-space:pre-wrap;';
-    pre.textContent = JSON.stringify(monthly, null, 2);
-    card.appendChild(pre);
-    content.appendChild(card);
-  }
-
-  if (detailed) {
-    const card = document.createElement('div');
-    card.innerHTML = '<div class="usage-section-title">Detailed App Usage</div>';
-    const pre = document.createElement('pre');
-    pre.style.cssText = 'font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;white-space:pre-wrap;';
-    pre.textContent = JSON.stringify(detailed, null, 2);
-    card.appendChild(pre);
-    content.appendChild(card);
-  }
 }
 
 function buildLocalStats() {
