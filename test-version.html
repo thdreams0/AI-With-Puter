@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PuterAI Studio</title>
+<title>AI With Puter</title>
 <script src="https://js.puter.com/v2/" onerror="console.error('Puter.js failed to load.');"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Berkeley+Mono:ital,wght@0,100..700;1,100..700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,37 +11,37 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #0a0b0d;
-  --bg2:      #0f1115;
-  --bg3:      #151820;
-  --bg4:      #1c2030;
-  --bg5:      #232840;
-  --border:   rgba(255,255,255,0.055);
+  --bg:       #1f1f1e;
+  --bg2:      #262625;
+  --bg3:      #2d2d2c;
+  --bg4:      #353534;
+  --bg5:      #3d3d3c;
+  --border:   rgba(255,255,255,0.06);
   --border2:  rgba(255,255,255,0.10);
-  --border3:  rgba(255,255,255,0.16);
-  --text:     #dde2f0;
-  --text2:    #7a8099;
-  --text3:    #424860;
-  --accent:   #5b7fff;
-  --accent2:  #9d7fff;
-  --accent3:  #3ecf8e;
-  --orange:   #f5a623;
+  --border3:  rgba(255,255,255,0.18);
+  --text:     #f8f8f6;
+  --text2:    #a0a09c;
+  --text3:    #6c6c68;
+  --accent:   #f8f8f6;
+  --accent2:  #f8f8f6;
+  --accent3:  #a0a09c;
+  --orange:   #d4a574;
   --red:      #e05c5c;
-  --green:    #3ecf8e;
-  --yellow:   #f5d060;
-  --purple:   #b97fff;
-  --accent-glow: rgba(91,127,255,0.18);
-  --accent-dim:  rgba(91,127,255,0.10);
-  --green-dim:   rgba(62,207,142,0.10);
+  --green:    #7ab87a;
+  --yellow:   #d4b874;
+  --purple:   #a090c0;
+  --accent-glow: rgba(255,255,255,0.06);
+  --accent-dim:  rgba(255,255,255,0.06);
+  --green-dim:   rgba(122,184,122,0.10);
   --red-dim:     rgba(224,92,92,0.10);
-  --user-bg:  #141c38;
-  --user-brd: rgba(91,127,255,0.22);
-  --ai-bg:    #111318;
-  --sidebar:  256px;
-  --topbar:   48px;
+  --user-bg:  #2a2a29;
+  --user-brd: rgba(255,255,255,0.10);
+  --ai-bg:    #262625;
+  --sidebar:  300px;
+  --topbar:   52px;
   --r:        10px;
   --r-sm:     6px;
-  --font:     'Geist', sans-serif;
+  --font:     'Anthropic Sheriff', 'Geist', sans-serif;
   --mono:     'Berkeley Mono', 'Fira Code', monospace;
 }
 
@@ -73,36 +73,28 @@ body {
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 220px;
 }
 
 .logo-mark {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-  border-radius: 7px;
+  width: 34px;
+  height: 34px;
+  background: var(--bg5);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  /* Replace with your logo img tag later */
 }
 
-.logo-mark svg { width: 15px; height: 15px; fill: white; }
+.logo-mark svg { width: 18px; height: 18px; fill: white; }
 
 .logo-name {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.03em;
   color: var(--text);
-}
-
-.logo-name span {
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .tab-nav {
@@ -116,23 +108,23 @@ body {
 }
 
 .tab-btn {
-  padding: 5px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: none;
   background: transparent;
   color: var(--text2);
   font-family: var(--font);
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   white-space: nowrap;
 }
 
-.tab-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; flex-shrink: 0; }
+.tab-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; flex-shrink: 0; }
 .tab-btn:hover { color: var(--text); background: var(--bg4); }
 .tab-btn.active { background: var(--bg5); color: var(--accent); border: 1px solid var(--border2); }
 
@@ -189,24 +181,16 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  overflow-y: auto;
 }
 
 .section-label {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-family: var(--mono);
   color: var(--text3);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 7px;
-}
-
-/* Model selector in sidebar */
-.model-selector-wrap {
-  position: relative;
+  margin-bottom: 8px;
 }
 
 .model-select {
@@ -226,9 +210,6 @@ body {
   background-position: right 8px center;
   transition: border-color 0.15s;
 }
-
-.model-select:focus { outline: none; border-color: var(--accent); }
-.model-select option { background: #1a1d24; }
 
 .model-capability-badges {
   display: flex;
@@ -283,10 +264,10 @@ body {
 .conv-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 
 .conv-item {
-  padding: 7px 9px;
+  padding: 8px 10px;
   border-radius: var(--r-sm);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text2);
   display: flex;
   align-items: center;
@@ -302,8 +283,8 @@ body {
 .conv-item svg { width: 12px; height: 12px; stroke: currentColor; fill: none; flex-shrink: 0; opacity: 0.5; }
 
 .conv-item-text { display: flex; flex-direction: column; gap: 1px; overflow: hidden; flex: 1; }
-.conv-title { font-size: 11.5px; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.conv-model { font-size: 9.5px; color: var(--text3); font-family: var(--mono); }
+.conv-title { font-size: 13px; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.conv-model { font-size: 10.5px; color: var(--text3); font-family: var(--mono); }
 
 .conv-delete-btn {
   width: 18px; height: 18px;
@@ -327,13 +308,13 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 9px;
+  padding: 8px 10px;
   margin: 4px 8px 8px;
   border-radius: var(--r-sm);
   border: 1px dashed var(--border2);
   background: transparent;
   color: var(--text2);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--font);
   cursor: pointer;
   transition: all 0.12s;
@@ -367,7 +348,7 @@ body {
 }
 
 .chat-title {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text2);
   max-width: 380px;
@@ -388,10 +369,10 @@ body {
 }
 
 .icon-btn {
-  width: 30px; height: 30px;
+  width: 36px; height: 36px;
   background: var(--bg3);
   border: 1px solid var(--border);
-  border-radius: var(--r-sm);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -401,7 +382,7 @@ body {
 }
 
 .icon-btn:hover { border-color: var(--border2); color: var(--text); background: var(--bg4); }
-.icon-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
+.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
 .icon-btn.danger:hover { border-color: rgba(224,92,92,0.4); color: var(--red); background: var(--red-dim); }
 
 /* Messages */
@@ -424,14 +405,14 @@ body {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  opacity: 0.45;
+  opacity: 0.8;
   padding: 40px;
   text-align: center;
 }
 
 .empty-icon {
-  width: 52px; height: 52px;
-  border-radius: 14px;
+  width: 60px; height: 60px;
+  border-radius: 16px;
   background: var(--bg3);
   border: 1px solid var(--border);
   display: flex;
@@ -439,9 +420,24 @@ body {
   justify-content: center;
 }
 
-.empty-icon svg { width: 24px; height: 24px; stroke: var(--text3); fill: none; }
-.empty-title { font-size: 15px; font-weight: 500; color: var(--text2); }
-.empty-sub { font-size: 12.5px; color: var(--text3); max-width: 300px; line-height: 1.5; }
+.empty-icon svg { width: 28px; height: 28px; stroke: var(--text3); fill: none; }
+.empty-title { font-size: 22px; font-weight: 600; color: var(--text); }
+.empty-sub { font-size: 16px; color: var(--text2); max-width: 360px; line-height: 1.5; }
+
+.suggestion-chip {
+  padding: 12px 20px;
+  border-radius: 24px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 14px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.suggestion-chip:hover { border-color: var(--text3); color: var(--text); background: var(--bg4); }
 
 /* Msg rows */
 .msg-row {
@@ -473,7 +469,7 @@ body {
   margin-top: 2px;
 }
 
-.msg-avatar.ai { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+.msg-avatar.ai { background: var(--bg5); color: var(--text); }
 .msg-avatar.user { background: var(--bg4); border: 1px solid var(--border2); color: var(--text2); }
 
 .msg-content { flex: 1; min-width: 0; }
@@ -491,10 +487,10 @@ body {
 .msg-time { font-size: 10px; font-family: var(--mono); color: var(--text3); opacity: 0.5; }
 
 .msg-bubble {
-  padding: 11px 15px;
+  padding: 12px 16px;
   border-radius: 10px;
-  font-size: 13.5px;
-  line-height: 1.68;
+  font-size: 15px;
+  line-height: 1.7;
   color: var(--text);
   display: inline-block;
   max-width: 100%;
@@ -635,7 +631,7 @@ body {
   border: none;
   color: var(--text);
   font-family: var(--font);
-  font-size: 13.5px;
+  font-size: 15px;
   line-height: 1.55;
   padding: 10px 12px;
   resize: none;
@@ -677,7 +673,7 @@ body {
   transition: background 0.15s;
 }
 
-.toggle.on { background: var(--accent); border-color: var(--accent); }
+.toggle.on { background: var(--green); border-color: var(--green); }
 
 .toggle::after {
   content: '';
@@ -696,7 +692,7 @@ body {
 .send-btn {
   width: 32px; height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  background: var(--bg5);
   border: none;
   cursor: pointer;
   display: flex;
@@ -706,7 +702,7 @@ body {
   transition: all 0.15s;
 }
 
-.send-btn:hover { transform: scale(1.04); box-shadow: 0 0 10px rgba(91,127,255,0.35); }
+.send-btn:hover { transform: scale(1.04); box-shadow: 0 0 10px rgba(255,255,255,0.15); }
 .send-btn:active { transform: scale(0.95); }
 .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 .send-btn svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.5; }
@@ -858,7 +854,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.65;
   border: none;
   resize: none;
@@ -936,9 +932,9 @@ body {
 .code-action-btn {
   padding: 7px 14px;
   border-radius: 7px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border: none;
-  color: white;
+  background: var(--bg5);
+  border: 1px solid var(--border2);
+  color: var(--text);
   font-family: var(--mono);
   font-size: 11px;
   cursor: pointer;
@@ -1358,6 +1354,32 @@ body {
 }
 
 .gen-image-container img:hover { transform: scale(1.02); }
+
+/* Light theme */
+body.light {
+  --bg:       #f5f5f4;
+  --bg2:      #e8e8e7;
+  --bg3:      #dcdcdb;
+  --bg4:      #d0d0cf;
+  --bg5:      #c4c4c3;
+  --border:   rgba(0,0,0,0.06);
+  --border2:  rgba(0,0,0,0.10);
+  --border3:  rgba(0,0,0,0.18);
+  --text:     #1c1c1a;
+  --text2:    #5c5c58;
+  --text3:    #8c8c88;
+  --accent:   #1c1c1a;
+  --accent2:  #3c3c3a;
+  --user-bg:  #e0e0df;
+  --user-brd: rgba(0,0,0,0.08);
+  --ai-bg:    #e8e8e7;
+  --accent-glow: rgba(0,0,0,0.06);
+  --accent-dim:  rgba(0,0,0,0.06);
+}
+
+body.light .file-warning { background: rgba(200,150,50,0.15); color: #5c4a1a; border-color: rgba(200,150,50,0.25); }
+body.light .file-warning strong { color: #3c2a0a; }
+body.light .preview-iframe { background: white; }
 </style>
 </head>
 <body>
@@ -1370,7 +1392,7 @@ body {
         <div class="logo-mark" id="logoMark">
           <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
-        <span class="logo-name">Puter<span>AI</span> Studio</span>
+        <span class="logo-name">AI With Puter</span>
       </div>
       <div class="sidebar-nav-col" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
         <button class="tab-btn active" id="tabChat" style="width: 100%; justify-content: flex-start;" onclick="switchTab('chat')">
@@ -1390,41 +1412,11 @@ body {
           Usage
         </button>
       </div>
-      <div style="width: 100%; display: flex; justify-content: flex-start;">
-        <div class="status-pill" id="statusPill" style="width: 100%;">
-          <div class="status-dot loading" id="statusDot"></div>
-          <span id="statusText">loading…</span>
-        </div>
       </div>
-    </div>
-    <div class="sidebar-section" id="modelSection">
-      <div class="section-label">Model</div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-        <span id="sidebarModelName" style="font-family:var(--mono);font-size:11px;color:var(--accent);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</span>
-        <button class="small-btn" onclick="switchTab('models')" style="flex-shrink:0;">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          Models
-        </button>
-      </div>
-      <div class="model-capability-badges" id="modelCapBadges">
-        <span class="cap-badge active" id="capChat">chat</span>
-        <span class="cap-badge vision" id="capVision">vision</span>
-        <span class="cap-badge image-gen" id="capImageGen">img-gen</span>
-        <span class="cap-badge audio" id="capAudio">audio</span>
-      </div>
-    </div>
 
-    <div style="padding: 7px 8px 3px 12px; font-size:9.5px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0;">Conversations</div>
+    <div style="padding: 7px 8px 3px 12px; font-size:10.5px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0;">Conversations</div>
 
     <div class="conv-list" id="convList">
-      <div class="conv-item active" id="conv_0" onclick="switchConv(0)">
-        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <div class="conv-item-text">
-          <span class="conv-title">New chat</span>
-          <span class="conv-model" id="convModel_0">loading…</span>
-        </div>
-        <div class="conv-delete-btn" onclick="deleteConv(event, 0)" title="Delete">×</div>
-      </div>
     </div>
 
     <button class="new-chat-btn" onclick="newChat()">
@@ -1450,6 +1442,9 @@ body {
           <div class="icon-btn danger" title="Clear & delete chat" onclick="clearChat()">
             <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </div>
+          <div class="icon-btn" title="Toggle theme" onclick="toggleTheme()">
+            <svg viewBox="0 0 24 24" stroke-width="1.5" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
         </div>
       </div>
 
@@ -1458,8 +1453,14 @@ body {
           <div class="empty-icon">
             <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
           </div>
-          <div class="empty-title">Start a conversation</div>
-          <div class="empty-sub">Select a model and type your message below. Puter.js handles auth automatically.</div>
+          <div class="empty-title" id="greeting">Good morning</div>
+          <div class="empty-sub" id="greetingSub">How can I help you today?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center;max-width:400px;" id="suggestions">
+            <div class="suggestion-chip" onclick="useSuggestion('Write a short story about a robot learning to paint')">Write a story</div>
+            <div class="suggestion-chip" onclick="useSuggestion('Explain quantum computing in simple terms')">Explain quantum computing</div>
+            <div class="suggestion-chip" onclick="useSuggestion('Help me debug my Python code')">Debug my code</div>
+            <div class="suggestion-chip" onclick="useSuggestion('Summarize the key events of World War II')">Summarize history</div>
+          </div>
         </div>
       </div>
 
@@ -1485,6 +1486,7 @@ body {
               <label class="stream-toggle" onclick="toggleStream()">
                 <div class="toggle on" id="streamToggle"></div>
                 streaming
+                <span class="stream-info-btn" onclick="showToast('Streaming shows AI responses token by token in real time instead of waiting for the full response.')" title="What is streaming?" style="width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--text3);color:var(--text3);font-size:9px;cursor:pointer;font-family:var(--mono);font-weight:700;">?</span>
               </label>
               <div style="display:flex;align-items:center;gap:10px">
                 <span class="char-count" id="charCount">0</span>
@@ -1619,15 +1621,22 @@ body {
 
 <!-- ─── PUTER CREDITS FOOTER (bottom of page) ─── -->
 <footer class="puter-footer">
-  Powered by <a href="https://puter.com" target="_blank">Puter.js</a> &nbsp;·&nbsp; Free AI via Puter Cloud &nbsp;·&nbsp; <a href="https://docs.puter.com" target="_blank">Docs</a>
+  <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+    <span>Powered by <a href="https://puter.com" target="_blank">Puter.js</a> &nbsp;·&nbsp; Free AI via Puter Cloud &nbsp;·&nbsp; <a href="https://docs.puter.com" target="_blank">Docs</a></span>
+    <span>&nbsp;·&nbsp; <a href="https://github.com/thdreams0/AI-With-Puter" target="_blank">GitHub</a></span>
+    <div class="status-pill" id="statusPill" style="display:inline-flex;">
+      <div class="status-dot loading" id="statusDot"></div>
+      <span id="statusText">loading…</span>
+    </div>
+  </div>
 </footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let conversations = [{ id: 0, title: 'New chat', messages: [], model: '' }];
-let activeConv = 0;
+let conversations = [];
+let activeConv = -1;
 let streaming = true;
 let isGenerating = false;
 let convCounter = 0;
@@ -1729,31 +1738,56 @@ const streamToggle   = document.getElementById('streamToggle');
 const charCount      = document.getElementById('charCount');
 const imgUploadBtn   = document.getElementById('imgUploadBtn');
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-let currentModel = 'claude-sonnet-4-5';
+// ─── GREETING ─────────────────────────────────────────────────────────────────
+function setGreeting() {
+  const h = new Date().getHours();
+  let greeting, sub;
+  if (h < 12) { greeting = 'Good morning'; sub = 'How can I help you start your day?'; }
+  else if (h < 18) { greeting = 'Good afternoon'; sub = 'What can I help you with this afternoon?'; }
+  else { greeting = 'Good evening'; sub = 'How can I help you this evening?'; }
+  const el = document.getElementById('greeting');
+  const subEl = document.getElementById('greetingSub');
+  if (el) el.textContent = greeting;
+  if (subEl) subEl.textContent = sub;
+}
+setGreeting();
 
-function setCurrentModel(id) {
-  currentModel = id;
-  topbarModel.textContent = id;
-  document.getElementById('sidebarModelName').textContent = shortModelName(id);
-  updateCapBadges(id);
-  if (conversations[activeConv]) {
-    conversations[activeConv].model = id;
-    updateConvItem(activeConv, conversations[activeConv].title, id);
-  }
+function useSuggestion(text) {
+  inputMsg.value = text;
+  charCount.textContent = text.length;
+  inputMsg.style.height = 'auto';
+  inputMsg.style.height = Math.min(inputMsg.scrollHeight, 180) + 'px';
+  inputMsg.focus();
+  sendMessage();
 }
 
-setCurrentModel(currentModel);
-conversations[0].model = currentModel;
-document.getElementById('convModel_0').textContent = currentModel;
-topbarModel.textContent = currentModel;
-updateCapBadges(currentModel);
+// ─── THEME ────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const icon = document.getElementById('themeIcon');
+  const isLight = document.body.classList.contains('light');
+  icon.innerHTML = isLight
+    ? '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  localStorage.setItem('ai-puter-theme', isLight ? 'light' : 'dark');
+}
+
+(function() {
+  if (localStorage.getItem('ai-puter-theme') === 'light') {
+    document.body.classList.add('light');
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  }
+})();
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+topbarTitle.textContent = 'AI With Puter';
 
 // File protocol warning
 if (location.protocol === 'file:') {
   const w = document.createElement('div');
   w.className = 'file-warning';
-  w.innerHTML = '<strong>Running from a local file may break Puter auth.</strong> Serve via <code>python3 -m http.server</code> and open <code>http://localhost:8000</code>.';
+  w.innerHTML = '<strong>Running from a local file may break Puter auth.</strong> Serve via <code>python3 -m http.server</code> and open <code>http://localhost:8000</code>. Chats will be saved to your browser until you sign in.';
   document.body.appendChild(w);
 }
 
@@ -1770,10 +1804,9 @@ function waitForPuter(cb, attempts = 0) {
 
 waitForPuter(p => {
   puterReady = true;
-  setStatus('ready', 'puter.js ready');
-  // Try to load chats from FS
+  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
+  setStatus('ready', signedIn ? `signed in${p.user?.username ? ' as ' + p.user.username : ''}` : 'ready — sign in to save chats');
   loadChatsFromFS();
-  // Load models list if Models tab was opened
 });
 
 function setStatus(state, text) {
@@ -1800,16 +1833,6 @@ function shortModelName(id) {
   const parts = id.split('/');
   const last = parts[parts.length - 1];
   return last.length > 22 ? last.slice(0, 22) + '…' : last;
-}
-
-function updateCapBadges(modelId) {
-  const cap = MODEL_CAPS[modelId] || {};
-  document.getElementById('capChat').classList.toggle('active', true);
-  document.getElementById('capVision').classList.toggle('active', !!cap.vision);
-  document.getElementById('capImageGen').classList.toggle('active', !!cap.imageGen);
-  document.getElementById('capAudio').classList.toggle('active', !!cap.audio);
-  // Enable/disable image upload button
-  imgUploadBtn.disabled = !cap.vision;
 }
 
 // ─── INPUT HANDLERS ─────────────────────────────────────────────────────────
@@ -1862,8 +1885,29 @@ async function sendMessage() {
   const text = inputMsg.value.trim();
   if ((!text && pendingImages.length === 0) || isGenerating) return;
 
+  // Auto-create conversation if none active
+  if (activeConv === -1) {
+    convCounter++;
+    const id = convCounter;
+    conversations.push({ id, title: 'New chat', messages: [], model: 'claude-sonnet-4-5' });
+    activeConv = conversations.length - 1;
+    const item = document.createElement('div');
+    item.className = 'conv-item';
+    item.id = 'conv_' + activeConv;
+    item.innerHTML = `
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="conv-item-text">
+        <span class="conv-title">New chat</span>
+        <span class="conv-model" id="convModel_${activeConv}">claude-sonnet-4-5</span>
+      </div>
+      <div class="conv-delete-btn" onclick="deleteConv(event,${activeConv})" title="Delete">×</div>`;
+    item.addEventListener('click', (e) => { if (!e.target.classList.contains('conv-delete-btn')) switchConv(activeConv); });
+    document.getElementById('convList').appendChild(item);
+    switchConv(activeConv);
+  }
+
   const conv = getConv();
-  const model = conv.model || currentModel;
+  const model = conv.model || 'claude-sonnet-4-5';
   const cap = MODEL_CAPS[model] || {};
   const puterClient = getPuter();
 
@@ -2033,7 +2077,7 @@ function getConv() { return conversations[activeConv]; }
 function newChat() {
   convCounter++;
   const id = convCounter;
-  const model = currentModel;
+  const model = 'claude-sonnet-4-5';
   conversations.push({ id, title: 'New chat', messages: [], model });
   const idx = conversations.length - 1;
   activeConv = idx;
@@ -2060,24 +2104,25 @@ function switchConv(idx) {
   activeConv = idx;
   const conv = getConv();
   topbarTitle.textContent = conv.title;
-  topbarModel.textContent = conv.model || currentModel;
-  if (conv.model) { setCurrentModel(conv.model); }
+  topbarModel.textContent = conv.model || 'claude-sonnet-4-5';
   renderMessages();
 }
 
 function deleteConv(event, idx) {
   event.stopPropagation();
-  if (conversations.length === 1) {
-    clearChat();
-    return;
-  }
-  // Remove from Puter FS
   deleteConvFromFS(idx);
   conversations.splice(idx, 1);
   const el = document.getElementById('conv_' + idx);
   if (el) el.remove();
-  // Re-index remaining items
-  // Simple: reset list
+  if (conversations.length === 0) {
+    activeConv = -1;
+    topbarTitle.textContent = 'AI With Puter';
+    topbarModel.textContent = '—';
+    messagesContainer.innerHTML = '';
+    messagesContainer.appendChild(emptyState);
+    document.getElementById('convList').innerHTML = '';
+    return;
+  }
   rebuildConvList();
   activeConv = 0;
   switchConv(0);
@@ -2131,8 +2176,9 @@ function copyConversation() {
 
 // ─── RENDER MESSAGES ─────────────────────────────────────────────────────────
 function renderMessages() {
-  const conv = getConv();
   messagesContainer.innerHTML = '';
+  if (activeConv === -1 || !conversations[activeConv]) { messagesContainer.appendChild(emptyState); return; }
+  const conv = getConv();
   if (!conv.messages.length) { messagesContainer.appendChild(emptyState); return; }
   conv.messages.forEach((msg, i) => messagesContainer.appendChild(createMsgEl(msg, i)));
   scrollToBottom();
@@ -2218,35 +2264,47 @@ const FS_PATH = 'puterai-studio/chats.json';
 const FS_CODE_PATH = 'puterai-studio/code-project.json';
 
 async function saveChatsToFS() {
+  const data = conversations.map(c => ({
+    ...c,
+    messages: c.messages.map(m => ({ ...m, images: undefined }))
+  }));
+  const json = JSON.stringify(data);
+  // Fallback to localStorage
+  try { localStorage.setItem('ai-puter-chats', json); } catch (e) {}
   const p = getPuter();
   if (!p) return;
   try {
-    // Strip images (base64) from saved data to keep file small
-    const data = conversations.map(c => ({
-      ...c,
-      messages: c.messages.map(m => ({ ...m, images: undefined }))
-    }));
-    await p.fs.write(FS_PATH, JSON.stringify(data), { createMissingParents: true });
+    await p.fs.write(FS_PATH, json, { createMissingParents: true });
   } catch (e) { console.warn('FS save failed:', e); }
 }
 
 async function loadChatsFromFS() {
   const p = getPuter();
   if (!p) return;
+  let data = null;
+  // Try Puter FS first
   try {
     const file = await p.fs.read(FS_PATH);
-    if (!file) return;
-    const text = await file.text();
-    const data = JSON.parse(text);
-    if (Array.isArray(data) && data.length > 0) {
-      conversations = data.map(c => ({ ...c, messages: c.messages || [] }));
-      convCounter = conversations.reduce((max, c) => Math.max(max, c.id || 0), 0);
-      activeConv = 0;
-      rebuildConvList();
-      switchConv(0);
-      showToast('Chats restored from Puter FS');
+    if (file) {
+      const text = await file.text();
+      data = JSON.parse(text);
     }
-  } catch (e) { /* no saved chats yet */ }
+  } catch (e) { /* try localStorage */ }
+  // Fallback to localStorage
+  if (!data) {
+    try {
+      const local = localStorage.getItem('ai-puter-chats');
+      if (local) data = JSON.parse(local);
+    } catch (e) {}
+  }
+  if (Array.isArray(data) && data.length > 0) {
+    conversations = data.map(c => ({ ...c, messages: c.messages || [] }));
+    convCounter = conversations.reduce((max, c) => Math.max(max, c.id || 0), 0);
+    activeConv = 0;
+    rebuildConvList();
+    switchConv(0);
+    showToast('Chats restored');
+  }
 }
 
 async function deleteConvFromFS(idx) {
@@ -2336,12 +2394,12 @@ function buildProviderSection(label, models) {
     </div>
     <div class="models-grid" id="grid_${label.replace(/\s/g,'_')}"></div>`;
   const grid = sec.querySelector('.models-grid');
-  const currentModel = currentModel;
+  const currentModel = 'claude-sonnet-4-5';
 
   models.forEach(m => {
     const cap = MODEL_CAPS[m.id] || {};
     const card = document.createElement('div');
-    card.className = 'model-card' + (m.id === currentModel ? ' selected' : '');
+    card.className = 'model-card' + (m.id === 'claude-sonnet-4-5' ? ' selected' : '');
     const caps = [];
     if (cap.vision) caps.push('<span class="cap-badge vision active">vision</span>');
     if (cap.imageGen) caps.push('<span class="cap-badge image-gen active">img-gen</span>');
@@ -2362,7 +2420,11 @@ function buildProviderSection(label, models) {
 }
 
 function selectModel(id) {
-  setCurrentModel(id);
+  if (conversations[activeConv]) {
+    conversations[activeConv].model = id;
+    updateConvItem(activeConv, conversations[activeConv].title, id);
+  }
+  topbarModel.textContent = id;
   switchTab('chat');
   showToast('Model set to ' + id);
 }
@@ -2384,6 +2446,7 @@ async function loadUsage() {
 
   let monthly = null;
   let detailed = null;
+  let diskUsage = null;
 
   try {
     if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
@@ -2393,14 +2456,39 @@ async function loadUsage() {
     if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
   } catch (e) { console.warn('getDetailedAppUsage:', e); }
 
+  try {
+    if (typeof p.fs?.usage === 'function') diskUsage = await p.fs.usage();
+    else if (typeof p.fs?.diskUsage === 'function') diskUsage = await p.fs.diskUsage();
+  } catch (e) { console.warn('diskUsage:', e); }
+
   loader.style.display = 'none';
 
-  if (!monthly && !detailed) {
+  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
+
+  if (!signedIn && !monthly && !detailed) {
     content.innerHTML = `
       <div class="loading-text" style="color:var(--text3)">
-        Usage API not available. Either not signed in, or API not supported in this Puter version.<br><br>
+        Not signed in. <a href="#" onclick="showToast(\\'Click the Puter logo to sign in\\');return false;" style="color:var(--accent)">Sign in</a> to save chats and view usage.<br><br>
         Local session stats are shown below.
       </div>`;
+  }
+
+  // Storage card
+  if (diskUsage) {
+    const used = diskUsage.used || diskUsage.size || 0;
+    const total = diskUsage.capacity || diskUsage.total || 1;
+    const pct = Math.min(100, Math.round((used / total) * 100));
+    const storageCard = document.createElement('div');
+    storageCard.innerHTML = `
+      <div class="usage-section-title">Storage</div>
+      <div class="usage-grid">
+        <div class="usage-card">
+          <div class="usage-card-label">Storage Used</div>
+          <div class="usage-card-value accent">${pct}%</div>
+          <div class="usage-card-sub">${(used / 1048576).toFixed(1)} MB / ${(total / 1048576).toFixed(1)} MB</div>
+        </div>
+      </div>`;
+    content.appendChild(storageCard);
   }
 
   // Always show local session stats
@@ -2584,7 +2672,7 @@ async function askCodeAI() {
   const userMsg = `Current file (${activeCodeFile}):\n\`\`\`\n${currentCode}\n\`\`\`\n\nRequest: ${prompt}`;
 
   try {
-  const model = currentModel;
+  const model = 'claude-sonnet-4-5';
     const resp = await p.ai.chat([{ role: 'user', content: userMsg }], {
       model,
       system: sys,
