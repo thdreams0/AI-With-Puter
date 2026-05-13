@@ -1,6 +1,6 @@
 # AI-With-Puter
 
-The site it's being heavely updated. For most of the times, the updated site will be at test-version.html
+*The site it's being heavely updated. For most of the times, the updated site will be at `test-version.html`*
 
 This this a fashion open-source project using [puter.js](https://docs.puter.com/) for the AI models.
 As I heavely used [Claude](https://claude.ai) the site's gui is based on it
