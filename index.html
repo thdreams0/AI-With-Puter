@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PuterAI Studio</title>
+<title>AI With Puter</title>
+<link rel="icon" type="image/jpeg" href="favicon.jpg">
+<script>window.puter = window.puter || {}; window.puter.disableClipboard = true;</script>
 <script src="https://js.puter.com/v2/" onerror="console.error('Puter.js failed to load.');"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Berkeley+Mono:ital,wght@0,100..700;1,100..700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,37 +13,37 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #0a0b0d;
-  --bg2:      #0f1115;
-  --bg3:      #151820;
-  --bg4:      #1c2030;
-  --bg5:      #232840;
-  --border:   rgba(255,255,255,0.055);
+  --bg:       #1f1f1e;
+  --bg2:      #262625;
+  --bg3:      #2d2d2c;
+  --bg4:      #353534;
+  --bg5:      #3d3d3c;
+  --border:   rgba(255,255,255,0.06);
   --border2:  rgba(255,255,255,0.10);
-  --border3:  rgba(255,255,255,0.16);
-  --text:     #dde2f0;
-  --text2:    #7a8099;
-  --text3:    #424860;
-  --accent:   #5b7fff;
-  --accent2:  #9d7fff;
-  --accent3:  #3ecf8e;
-  --orange:   #f5a623;
+  --border3:  rgba(255,255,255,0.18);
+  --text:     #f8f8f6;
+  --text2:    #a0a09c;
+  --text3:    #6c6c68;
+  --accent:   #f8f8f6;
+  --accent2:  #f8f8f6;
+  --accent3:  #a0a09c;
+  --orange:   #d4a574;
   --red:      #e05c5c;
-  --green:    #3ecf8e;
-  --yellow:   #f5d060;
-  --purple:   #b97fff;
-  --accent-glow: rgba(91,127,255,0.18);
-  --accent-dim:  rgba(91,127,255,0.10);
-  --green-dim:   rgba(62,207,142,0.10);
+  --green:    #7ab87a;
+  --yellow:   #d4b874;
+  --purple:   #a090c0;
+  --accent-glow: rgba(255,255,255,0.06);
+  --accent-dim:  rgba(255,255,255,0.06);
+  --green-dim:   rgba(122,184,122,0.10);
   --red-dim:     rgba(224,92,92,0.10);
-  --user-bg:  #141c38;
-  --user-brd: rgba(91,127,255,0.22);
-  --ai-bg:    #111318;
-  --sidebar:  256px;
-  --topbar:   48px;
+  --user-bg:  #2a2a29;
+  --user-brd: rgba(255,255,255,0.10);
+  --ai-bg:    #262625;
+  --sidebar:  300px;
+  --topbar:   52px;
   --r:        10px;
   --r-sm:     6px;
-  --font:     'Geist', sans-serif;
+  --font:     'Anthropic Sheriff', 'Geist', sans-serif;
   --mono:     'Berkeley Mono', 'Fira Code', monospace;
 }
 
@@ -73,36 +75,28 @@ body {
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 220px;
 }
 
 .logo-mark {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-  border-radius: 7px;
+  width: 34px;
+  height: 34px;
+  background: var(--bg5);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  /* Replace with your logo img tag later */
 }
 
-.logo-mark svg { width: 15px; height: 15px; fill: white; }
+.logo-mark svg { width: 18px; height: 18px; fill: white; }
 
 .logo-name {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.03em;
   color: var(--text);
-}
-
-.logo-name span {
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .tab-nav {
@@ -116,23 +110,23 @@ body {
 }
 
 .tab-btn {
-  padding: 5px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: none;
   background: transparent;
   color: var(--text2);
   font-family: var(--font);
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   white-space: nowrap;
 }
 
-.tab-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; flex-shrink: 0; }
+.tab-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; flex-shrink: 0; }
 .tab-btn:hover { color: var(--text); background: var(--bg4); }
 .tab-btn.active { background: var(--bg5); color: var(--accent); border: 1px solid var(--border2); }
 
@@ -189,28 +183,16 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.sidebar-section {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  overflow-y: auto;
 }
 
 .section-label {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-family: var(--mono);
   color: var(--text3);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 7px;
-}
-
-/* Model selector in sidebar */
-.model-selector-wrap {
-  position: relative;
+  margin-bottom: 8px;
 }
 
 .model-select {
@@ -230,9 +212,6 @@ body {
   background-position: right 8px center;
   transition: border-color 0.15s;
 }
-
-.model-select:focus { outline: none; border-color: var(--accent); }
-.model-select option { background: #1a1d24; }
 
 .model-capability-badges {
   display: flex;
@@ -287,10 +266,10 @@ body {
 .conv-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 
 .conv-item {
-  padding: 7px 9px;
+  padding: 8px 10px;
   border-radius: var(--r-sm);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text2);
   display: flex;
   align-items: center;
@@ -306,8 +285,8 @@ body {
 .conv-item svg { width: 12px; height: 12px; stroke: currentColor; fill: none; flex-shrink: 0; opacity: 0.5; }
 
 .conv-item-text { display: flex; flex-direction: column; gap: 1px; overflow: hidden; flex: 1; }
-.conv-title { font-size: 11.5px; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.conv-model { font-size: 9.5px; color: var(--text3); font-family: var(--mono); }
+.conv-title { font-size: 13px; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.conv-model { font-size: 10.5px; color: var(--text3); font-family: var(--mono); }
 
 .conv-delete-btn {
   width: 18px; height: 18px;
@@ -331,13 +310,13 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 9px;
+  padding: 8px 10px;
   margin: 4px 8px 8px;
   border-radius: var(--r-sm);
   border: 1px dashed var(--border2);
   background: transparent;
   color: var(--text2);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--font);
   cursor: pointer;
   transition: all 0.12s;
@@ -371,7 +350,7 @@ body {
 }
 
 .chat-title {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text2);
   max-width: 380px;
@@ -392,10 +371,10 @@ body {
 }
 
 .icon-btn {
-  width: 30px; height: 30px;
+  width: 36px; height: 36px;
   background: var(--bg3);
   border: 1px solid var(--border);
-  border-radius: var(--r-sm);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -405,7 +384,7 @@ body {
 }
 
 .icon-btn:hover { border-color: var(--border2); color: var(--text); background: var(--bg4); }
-.icon-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
+.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
 .icon-btn.danger:hover { border-color: rgba(224,92,92,0.4); color: var(--red); background: var(--red-dim); }
 
 /* Messages */
@@ -428,14 +407,14 @@ body {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  opacity: 0.45;
+  opacity: 0.8;
   padding: 40px;
   text-align: center;
 }
 
 .empty-icon {
-  width: 52px; height: 52px;
-  border-radius: 14px;
+  width: 60px; height: 60px;
+  border-radius: 16px;
   background: var(--bg3);
   border: 1px solid var(--border);
   display: flex;
@@ -443,9 +422,24 @@ body {
   justify-content: center;
 }
 
-.empty-icon svg { width: 24px; height: 24px; stroke: var(--text3); fill: none; }
-.empty-title { font-size: 15px; font-weight: 500; color: var(--text2); }
-.empty-sub { font-size: 12.5px; color: var(--text3); max-width: 300px; line-height: 1.5; }
+.empty-icon svg { width: 28px; height: 28px; stroke: var(--text3); fill: none; }
+.empty-title { font-size: 22px; font-weight: 600; color: var(--text); }
+.empty-sub { font-size: 16px; color: var(--text2); max-width: 360px; line-height: 1.5; }
+
+.suggestion-chip {
+  padding: 12px 20px;
+  border-radius: 24px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 14px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.suggestion-chip:hover { border-color: var(--text3); color: var(--text); background: var(--bg4); }
 
 /* Msg rows */
 .msg-row {
@@ -477,7 +471,7 @@ body {
   margin-top: 2px;
 }
 
-.msg-avatar.ai { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+.msg-avatar.ai { background: var(--bg5); color: var(--text); }
 .msg-avatar.user { background: var(--bg4); border: 1px solid var(--border2); color: var(--text2); }
 
 .msg-content { flex: 1; min-width: 0; }
@@ -495,10 +489,10 @@ body {
 .msg-time { font-size: 10px; font-family: var(--mono); color: var(--text3); opacity: 0.5; }
 
 .msg-bubble {
-  padding: 11px 15px;
+  padding: 12px 16px;
   border-radius: 10px;
-  font-size: 13.5px;
-  line-height: 1.68;
+  font-size: 15px;
+  line-height: 1.7;
   color: var(--text);
   display: inline-block;
   max-width: 100%;
@@ -613,32 +607,6 @@ body {
   gap: 8px;
 }
 
-.input-model-selector {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.input-model-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 9px;
-  border-radius: 6px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  font-family: var(--mono);
-  font-size: 10.5px;
-  cursor: pointer;
-  transition: all 0.12s;
-  white-space: nowrap;
-}
-
-.input-model-btn:hover { border-color: var(--border2); color: var(--text); }
-.input-model-btn svg { width: 10px; height: 10px; stroke: currentColor; fill: none; }
-
 .input-actions-left { display: flex; align-items: center; gap: 4px; }
 .input-actions-right { display: flex; align-items: center; gap: 6px; }
 
@@ -665,7 +633,7 @@ body {
   border: none;
   color: var(--text);
   font-family: var(--font);
-  font-size: 13.5px;
+  font-size: 15px;
   line-height: 1.55;
   padding: 10px 12px;
   resize: none;
@@ -707,7 +675,7 @@ body {
   transition: background 0.15s;
 }
 
-.toggle.on { background: var(--accent); border-color: var(--accent); }
+.toggle.on { background: var(--green); border-color: var(--green); }
 
 .toggle::after {
   content: '';
@@ -726,7 +694,7 @@ body {
 .send-btn {
   width: 32px; height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  background: var(--bg5);
   border: none;
   cursor: pointer;
   display: flex;
@@ -736,7 +704,7 @@ body {
   transition: all 0.15s;
 }
 
-.send-btn:hover { transform: scale(1.04); box-shadow: 0 0 10px rgba(91,127,255,0.35); }
+.send-btn:hover { transform: scale(1.04); box-shadow: 0 0 10px rgba(255,255,255,0.15); }
 .send-btn:active { transform: scale(0.95); }
 .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 .send-btn svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.5; }
@@ -774,222 +742,6 @@ body {
 }
 
 /* ─── CODING TAB ─── */
-.coding-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  height: 100%;
-}
-
-.code-sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: var(--bg2);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-sidebar-header {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.file-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 5px 6px;
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-size: 11.5px;
-  font-family: var(--mono);
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.12s;
-}
-
-.file-item:hover { background: var(--bg3); color: var(--text); }
-.file-item.active { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--user-brd); }
-.file-item svg { width: 12px; height: 12px; stroke: currentColor; fill: none; flex-shrink: 0; }
-
-.code-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  overflow-x: auto;
-  flex-shrink: 0;
-}
-
-.code-tabs::-webkit-scrollbar { height: 2px; }
-.code-tabs::-webkit-scrollbar-thumb { background: var(--border2); }
-
-.code-tab {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-size: 11.5px;
-  font-family: var(--mono);
-  color: var(--text3);
-  cursor: pointer;
-  border-right: 1px solid var(--border);
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: all 0.12s;
-  flex-shrink: 0;
-}
-
-.code-tab:hover { color: var(--text2); background: var(--bg3); }
-.code-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--bg); }
-
-.code-tab-close {
-  width: 14px; height: 14px;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: var(--text3);
-  transition: all 0.12s;
-}
-
-.code-tab-close:hover { background: var(--bg4); color: var(--red); }
-
-.code-editor-area {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
-.code-textarea {
-  flex: 1;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 12.5px;
-  line-height: 1.65;
-  border: none;
-  resize: none;
-  padding: 16px;
-  tab-size: 2;
-  outline: none;
-  overflow: auto;
-}
-
-.code-preview-pane {
-  width: 45%;
-  min-width: 280px;
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-preview-header {
-  padding: 7px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg2);
-  flex-shrink: 0;
-}
-
-.preview-iframe {
-  flex: 1;
-  border: none;
-  background: white;
-}
-
-.code-bottom-bar {
-  border-top: 1px solid var(--border);
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  background: var(--bg2);
-  flex-shrink: 0;
-}
-
-.code-prompt-row {
-  display: flex;
-  gap: 7px;
-  align-items: flex-end;
-}
-
-.code-prompt-input {
-  flex: 1;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 12px;
-  padding: 7px 10px;
-  border-radius: 7px;
-  resize: none;
-  min-height: 34px;
-  max-height: 100px;
-  overflow-y: auto;
-  transition: border-color 0.15s;
-}
-
-.code-prompt-input:focus { outline: none; border-color: var(--accent); }
-.code-prompt-input::placeholder { color: var(--text3); }
-
-.code-action-btn {
-  padding: 7px 14px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border: none;
-  color: white;
-  font-family: var(--mono);
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.code-action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-.code-action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-.code-status-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text3);
-}
-
-.code-status-item { display: flex; align-items: center; gap: 4px; }
 
 /* ─── MODELS TAB ─── */
 .models-panel {
@@ -1360,17 +1112,6 @@ body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Splitter */
-.resizer {
-  width: 4px;
-  background: var(--border);
-  cursor: col-resize;
-  flex-shrink: 0;
-  transition: background 0.12s;
-}
-
-.resizer:hover { background: var(--accent); }
-
 /* Image gen result */
 .gen-image-container {
   display: flex;
@@ -1388,84 +1129,140 @@ body {
 }
 
 .gen-image-container img:hover { transform: scale(1.02); }
+
+/* Settings sliders */
+input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; outline: none; cursor: pointer; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); cursor: pointer; }
+
+.setting-info {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid var(--text3); color: var(--text3);
+  font-size: 10px; font-family: var(--mono); font-weight: 700;
+  cursor: pointer; transition: all 0.12s; flex-shrink: 0; line-height: 1;
+}
+.setting-info:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* Light theme */
+body.light {
+  --bg:       #f5f5f4;
+  --bg2:      #e8e8e7;
+  --bg3:      #dcdcdb;
+  --bg4:      #d0d0cf;
+  --bg5:      #c4c4c3;
+  --border:   rgba(0,0,0,0.06);
+  --border2:  rgba(0,0,0,0.10);
+  --border3:  rgba(0,0,0,0.18);
+  --text:     #1c1c1a;
+  --text2:    #5c5c58;
+  --text3:    #8c8c88;
+  --accent:   #1c1c1a;
+  --accent2:  #3c3c3a;
+  --user-bg:  #e0e0df;
+  --user-brd: rgba(0,0,0,0.08);
+  --ai-bg:    #e8e8e7;
+  --accent-glow: rgba(0,0,0,0.06);
+  --accent-dim:  rgba(0,0,0,0.06);
+}
+
+body.light .file-warning { background: rgba(200,150,50,0.15); color: #5c4a1a; border-color: rgba(200,150,50,0.25); }
+body.light .file-warning strong { color: #3c2a0a; }
+
+/* ─── RESPONSIVE / MOBILE ─── */
+@media (max-width: 768px) {
+  .sidebar { width: 100% !important; min-width: unset !important; max-height: 48px; overflow: hidden; flex-direction: row; align-items: center; padding: 0 10px; border-right: none; border-bottom: 1px solid var(--border); }
+  .sidebar .logo-area { margin-bottom: 0 !important; min-width: unset; gap: 8px; }
+  .sidebar .logo-mark { width: 28px; height: 28px; }
+  .sidebar .logo-name { font-size: 13px; }
+  .sidebar .sidebar-nav-col { flex-direction: row; margin-bottom: 0 !important; gap: 2px; }
+  .sidebar .tab-btn { padding: 6px 10px; font-size: 12px; width: auto !important; }
+  .sidebar .tab-btn svg { width: 14px; height: 14px; }
+  .sidebar > div:first-child { display: flex; align-items: center; gap: 8px; border-bottom: none; padding: 0 !important; flex: 1; }
+  .sidebar .sidebar-section,
+  .sidebar .conv-list,
+  .sidebar .new-chat-btn,
+  .sidebar #statusPill,
+  .sidebar > div:not(:first-child) { display: none !important; }
+
+  .main-panel { height: calc(100vh - 48px); }
+
+  .app-body { flex-direction: column; }
+
+  .chat-title { font-size: 13px; max-width: 140px; }
+  .chat-model-badge { font-size: 9px; padding: 2px 6px; }
+  .icon-btn { width: 30px; height: 30px; }
+  .icon-btn svg { width: 14px; height: 14px; }
+
+  .messages { padding: 12px 10px; gap: 12px; }
+  .msg-row { max-width: 100%; }
+  .msg-bubble { font-size: 14px; padding: 10px 12px; }
+  .msg-avatar { width: 26px; height: 26px; font-size: 8px; }
+
+  .input-area { padding: 8px 10px 12px; }
+  .input-textarea { font-size: 14px; padding: 8px 10px; }
+  .input-bottom-row { padding: 4px 8px 6px; }
+  .stream-toggle { font-size: 10px; }
+
+  .empty-title { font-size: 18px; }
+  .empty-sub { font-size: 13px; }
+  .suggestion-chip { padding: 8px 14px; font-size: 12px; }
+
+  .models-grid { grid-template-columns: 1fr !important; }
+  .usage-grid { grid-template-columns: 1fr !important; }
+  .usage-header h2 { font-size: 16px; }
+  .models-header h2 { font-size: 16px; }
+
+  .chat-topbar { padding: 8px 12px; }
+  .topbar-global { padding: 0 10px; }
+
+  .puter-footer { font-size: 9px; padding: 4px 8px; }
+  .puter-footer > div { flex-wrap: wrap; gap: 6px; }
+
+  .models-panel { padding: 14px 12px; }
+  .usage-panel { padding: 14px 12px; }
+
+  .code-sidebar { width: 160px; min-width: 160px; }
+  .code-preview-pane { min-width: 200px; }
+  .code-textarea { font-size: 12px; padding: 10px; }
+}
 </style>
 </head>
 <body>
 
-<!-- ─── APP BODY ─── -->
 <div class="app-body">
 
-  <!-- ─── SIDEBAR ─── -->
   <aside class="sidebar">
-    <!-- Itens da antiga topbar-global movidos para o topo da sidebar -->
-    <div style="padding: 18px 12px 10px 12px; border-bottom: 1px solid var(--border);">
-      <div class="logo-area" style="margin-bottom: 12px;">
-        <div class="logo-mark" id="logoMark">
-          <!-- Swap this div for an <img src='logo.svg'> when you have a logo -->
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    <div style="padding: 18px 12px 0 12px; border-bottom: 1px solid var(--border);">
+      <div class="logo-area" style="margin-bottom: 18px; justify-content: flex-start;">
+        <div class="logo-mark" id="logoMark" style="overflow:hidden;">
+          <img src="favicon.jpg" alt="AI With Puter" style="width:100%;height:100%;object-fit:cover;">
         </div>
-        <span class="logo-name">Puter<span>AI</span> Studio</span>
+        <span class="logo-name" id="sidebarTitle">AI With Puter</span>
       </div>
-      <nav class="tab-nav" style="margin-bottom: 10px;">
-        <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')">
+      <div class="sidebar-nav-col" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
+        <button class="tab-btn active" id="tabChat" style="width: 100%; justify-content: flex-start;" onclick="switchTab('chat')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Chat
         </button>
-        <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          Coding
-        </button>
-        <button class="tab-btn" id="tabModels" onclick="switchTab('models')">
+        <button class="tab-btn" id="tabModels" style="width: 100%; justify-content: flex-start;" onclick="switchTab('models')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
           Models
         </button>
-        <button class="tab-btn" id="tabUsage" onclick="switchTab('usage')">
+        <button class="tab-btn" id="tabUsage" style="width: 100%; justify-content: flex-start;" onclick="switchTab('usage')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
           Usage
         </button>
-      </nav>
-      <div class="status-pill" id="statusPill">
-        <div class="status-dot loading" id="statusDot"></div>
-        <span id="statusText">loading…</span>
+        <button class="tab-btn" id="tabSettings" style="width: 100%; justify-content: flex-start;" onclick="switchTab('settings')">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
       </div>
-    </div>
-
-    <!-- Resto da sidebar original -->
-
-<!-- ─── APP BODY ─── -->
-<div class="app-body">
-
-  <!-- ─── SIDEBAR ─── -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="section-label">Model</div>
-      <div class="model-selector-wrap">
-        <select class="model-select" id="modelSelect" onchange="onModelChange()"></select>
       </div>
-      <div class="model-capability-badges" id="modelCapBadges">
-        <span class="cap-badge active" id="capChat">chat</span>
-        <span class="cap-badge vision" id="capVision">vision</span>
-        <span class="cap-badge image-gen" id="capImageGen">img-gen</span>
-        <span class="cap-badge audio" id="capAudio">audio</span>
-      </div>
-    </div>
 
-    <div class="sidebar-section">
-      <div class="section-label">System Prompt</div>
-      <textarea class="system-textarea" id="systemPrompt" placeholder="You are a helpful assistant…"></textarea>
-    </div>
-
-    <div style="padding: 7px 8px 3px 12px; font-size:9.5px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0;">Conversations</div>
+    <div style="padding: 7px 8px 3px 12px; font-size:10.5px; font-family:var(--mono); color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0;">Conversations</div>
 
     <div class="conv-list" id="convList">
-      <div class="conv-item active" id="conv_0" onclick="switchConv(0)">
-        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <div class="conv-item-text">
-          <span class="conv-title">New chat</span>
-          <span class="conv-model" id="convModel_0">loading…</span>
-        </div>
-        <div class="conv-delete-btn" onclick="deleteConv(event, 0)" title="Delete">×</div>
-      </div>
     </div>
 
     <button class="new-chat-btn" onclick="newChat()">
@@ -1491,6 +1288,9 @@ body {
           <div class="icon-btn danger" title="Clear & delete chat" onclick="clearChat()">
             <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </div>
+          <div class="icon-btn" title="Toggle theme" onclick="toggleTheme()">
+            <svg viewBox="0 0 24 24" stroke-width="1.5" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
         </div>
       </div>
 
@@ -1499,31 +1299,24 @@ body {
           <div class="empty-icon">
             <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
           </div>
-          <div class="empty-title">Start a conversation</div>
-          <div class="empty-sub">Select a model and type your message below. Puter.js handles auth automatically.</div>
+          <div class="empty-title" id="greeting">Good morning</div>
+          <div class="empty-sub" id="greetingSub">How can I help you today?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center;max-width:400px;" id="suggestions">
+            <div class="suggestion-chip" onclick="useSuggestion('Write a short story about a robot learning to paint')">Write a story</div>
+            <div class="suggestion-chip" onclick="useSuggestion('Explain quantum computing in simple terms')">Explain quantum computing</div>
+            <div class="suggestion-chip" onclick="useSuggestion('Help me debug my Python code')">Debug my code</div>
+            <div class="suggestion-chip" onclick="useSuggestion('Summarize the key events of World War II')">Summarize history</div>
+          </div>
         </div>
       </div>
-
-      <!-- Image upload file input (hidden) -->
-      <input type="file" id="imageFileInput" accept="image/*" multiple style="display:none" onchange="handleImageUpload(event)">
-
+      
       <div class="input-area">
         <div class="input-box-wrap">
           <div class="input-box" id="inputBox">
             <div class="input-toolbar">
               <div class="input-actions-left">
-                <button class="input-icon-btn" id="imgUploadBtn" title="Upload image" onclick="document.getElementById('imageFileInput').click()" disabled>
-                  <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                </button>
-              </div>
-              <div class="input-model-btn" id="inputModelBtn" onclick="document.getElementById('modelSelect').focus()">
-                <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-                <span id="inputModelName">—</span>
-                <svg viewBox="0 0 24 24" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
               </div>
             </div>
-
-            <div id="imagePreviews" class="image-preview-strip" style="display:none"></div>
 
             <textarea class="input-textarea" id="inputMsg" placeholder="Message the AI…" rows="1"></textarea>
 
@@ -1531,6 +1324,7 @@ body {
               <label class="stream-toggle" onclick="toggleStream()">
                 <div class="toggle on" id="streamToggle"></div>
                 streaming
+                <span class="stream-info-btn" onclick="showToast('Streaming shows AI responses token by token in real time instead of waiting for the full response.')" title="What is streaming?" style="width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--text3);color:var(--text3);font-size:9px;cursor:pointer;font-family:var(--mono);font-weight:700;">?</span>
               </label>
               <div style="display:flex;align-items:center;gap:10px">
                 <span class="char-count" id="charCount">0</span>
@@ -1544,95 +1338,45 @@ body {
       </div>
     </div>
 
-    <!-- CODING -->
-    <div class="panel-view" id="panelCode">
-      <div class="coding-layout">
-        <div class="code-sidebar">
-          <div class="code-sidebar-header">
-            Files
-            <button class="input-icon-btn" title="New file" onclick="newCodeFile()" style="width:20px;height:20px">
-              <svg viewBox="0 0 24 24" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-          </div>
-          <div class="file-list" id="fileList">
-            <div class="file-item active" data-file="index.html" onclick="switchFile('index.html')">
-              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              index.html
-            </div>
-            <div class="file-item" data-file="style.css" onclick="switchFile('style.css')">
-              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              style.css
-            </div>
-            <div class="file-item" data-file="script.js" onclick="switchFile('script.js')">
-              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              script.js
-            </div>
-          </div>
-        </div>
-
-        <div class="code-main">
-          <div class="code-tabs" id="codeTabs">
-            <div class="code-tab active" data-file="index.html">
-              index.html
-              <span class="code-tab-close" onclick="closeCodeTab(event,'index.html')">×</span>
-            </div>
-          </div>
-
-          <div class="code-editor-area">
-            <textarea class="code-textarea" id="codeEditor" spellcheck="false" placeholder="// start coding…&#10;// ask the AI below to generate or modify code"></textarea>
-            <div class="resizer" id="codeResizer"></div>
-            <div class="code-preview-pane" id="codePreviewPane">
-              <div class="code-preview-header">
-                Preview
-                <div class="btn-row">
-                  <button class="small-btn" onclick="runPreview()" title="Run preview">
-                    <svg viewBox="0 0 24 24" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Run
-                  </button>
-                  <button class="small-btn" onclick="saveCodeFiles()" title="Save to Puter FS">
-                    <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Save
-                  </button>
-                </div>
-              </div>
-              <iframe class="preview-iframe" id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-            </div>
-          </div>
-
-          <div class="code-bottom-bar">
-            <div class="code-prompt-row">
-              <textarea class="code-prompt-input" id="codePromptInput" placeholder="Ask AI to generate or modify the code… (e.g. 'add a dark mode toggle')" rows="1"></textarea>
-              <button class="code-action-btn" id="codeAskBtn" onclick="askCodeAI()">
-                Ask AI
-              </button>
-              <button class="code-action-btn" style="background:var(--bg4);border:1px solid var(--border2);color:var(--text2);" onclick="runPreview()">
-                Run
-              </button>
-            </div>
-            <div class="code-status-bar" id="codeStatusBar">
-              <div class="code-status-item">
-                <div class="status-dot" id="codeStatusDot" style="background:var(--text3);box-shadow:none;"></div>
-                <span id="codeStatusText">Ready</span>
-              </div>
-              <div class="code-status-item" id="codeFileInfo" style="color:var(--text3)">
-                index.html
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- MODELS -->
     <div class="panel-view" id="panelModels">
       <div class="models-panel" id="modelsPanelContent">
         <div class="models-header">
-          <h2>Model Discovery</h2>
-          <p>Browse available AI models and providers. Click a model to use it in chat.</p>
+          <h2>Models</h2>
+          <p>Browse and filter available AI models.</p>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+            <input type="text" id="modelSearch" placeholder="Search models…" oninput="renderFilteredModels()" style="flex:1;min-width:160px;padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:12px;outline:none;">
+            <select id="filterProvider" onchange="renderFilteredModels()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;">
+              <option value="">All Providers</option>
+              <option value="Anthropic">Anthropic</option>
+              <option value="OpenAI">OpenAI</option>
+              <option value="Google">Google</option>
+              <option value="Meta / Llama">Meta / Llama</option>
+              <option value="Mistral">Mistral</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="xAI">xAI</option>
+            </select>
+            <select id="filterMultiplier" onchange="renderFilteredModels()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;">
+              <option value="">All Multipliers</option>
+              <option value="0.05">0.05×</option>
+              <option value="0.1">0.1×</option>
+              <option value="0.15">0.15×</option>
+              <option value="0.2">0.2×</option>
+              <option value="0.25">0.25×</option>
+              <option value="0.3">0.3×</option>
+              <option value="0.5">0.5×</option>
+              <option value="1">1×</option>
+              <option value="2">2×</option>
+              <option value="3">3×</option>
+              <option value="5">5×</option>
+              <option value="15">15×</option>
+              <option value="img">Image Gen</option>
+            </select>
+          </div>
         </div>
         <div class="loading-text" id="modelsLoading">
           <div class="spinner"></div>
-          Loading models from Puter…
+          Loading models…
         </div>
         <div id="modelsContent" style="display:none"></div>
       </div>
@@ -1660,34 +1404,193 @@ body {
       </div>
     </div>
 
+    <!-- SETTINGS -->
+    <div class="panel-view" id="panelSettings">
+      <div class="usage-panel" id="settingsPanelContent">
+        <div class="usage-header">
+          <h2>Settings</h2>
+          <p>Configure AI model parameters for your conversations.</p>
+        </div>
+
+        <div class="usage-section-title">System Prompt</div>
+        <div class="usage-grid" style="grid-template-columns:1fr;">
+          <div class="usage-card" style="padding:16px 18px;">
+            <textarea id="sysPromptInput" placeholder="You are a helpful assistant…" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:13px;padding:10px;border-radius:8px;resize:vertical;min-height:80px;outline:none;" oninput="onSysPromptChange()"></textarea>
+          </div>
+        </div>
+
+        <div class="usage-section-title">Generation Parameters</div>
+        <div class="usage-grid" style="grid-template-columns:1fr;">
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Temperature</div>
+                <span class="setting-info" onclick="showToast('Controls randomness: lower values (near 0) make output more deterministic and focused, higher values (near 2) make it more creative and unpredictable.')" title="What is Temperature?">?</span>
+              </div>
+              <span id="tempValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0.7</span>
+            </div>
+            <input type="range" id="tempSlider" min="0" max="2" step="0.05" value="0.7" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0 (precise)</span><span>2 (creative)</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Max Tokens</div>
+                <span class="setting-info" onclick="showToast('Maximum number of tokens the AI can generate in a single response. Higher values allow longer responses but cost more credits.')" title="What are Max Tokens?">?</span>
+              </div>
+              <span id="maxtokValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">4096</span>
+            </div>
+            <input type="range" id="maxtokSlider" min="256" max="8192" step="256" value="4096" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>256</span><span>8192</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Top P</div>
+                <span class="setting-info" onclick="showToast('Nucleus sampling: considers tokens with top_p probability mass. Lower values make output more focused. 0.9 is a good default.')" title="What is Top P?">?</span>
+              </div>
+              <span id="toppValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0.9</span>
+            </div>
+            <input type="range" id="toppSlider" min="0" max="1" step="0.05" value="0.9" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0</span><span>1</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Frequency Penalty</div>
+                <span class="setting-info" onclick="showToast('Penalizes repeated tokens based on their frequency. Higher values reduce repetition in the output.')" title="What is Frequency Penalty?">?</span>
+              </div>
+              <span id="freqValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0</span>
+            </div>
+            <input type="range" id="freqSlider" min="0" max="2" step="0.1" value="0" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0 (none)</span><span>2 (strict)</span></div>
+          </div>
+
+          <div class="usage-card" style="padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="usage-card-label">Presence Penalty</div>
+                <span class="setting-info" onclick="showToast('Penalizes tokens that have already appeared. Higher values encourage the model to talk about new topics.')" title="What is Presence Penalty?">?</span>
+              </div>
+              <span id="presValue" class="usage-card-sub" style="font-size:13px;color:var(--accent);">0</span>
+            </div>
+            <input type="range" id="presSlider" min="0" max="2" step="0.1" value="0" oninput="updateSettingsDisplay()" style="width:100%;accent-color:var(--accent);">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;"><span>0 (none)</span><span>2 (strict)</span></div>
+          </div>
+
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <button class="small-btn" onclick="resetSettings()" style="border-color:var(--border2);">
+            <svg viewBox="0 0 24 24" stroke-width="1.5" style="width:12px;height:12px;stroke:currentColor;fill:none;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Reset to defaults
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /.main-panel -->
 </div><!-- /.app-body -->
 
 <!-- ─── PUTER CREDITS FOOTER (bottom of page) ─── -->
 <footer class="puter-footer">
-  Powered by <a href="https://puter.com" target="_blank">Puter.js</a> &nbsp;·&nbsp; Free AI via Puter Cloud &nbsp;·&nbsp; <a href="https://docs.puter.com" target="_blank">Docs</a>
+  <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+    <span>Powered by <a href="https://puter.com" target="_blank">Puter.js</a> &nbsp;·&nbsp; Free AI via Puter Cloud &nbsp;·&nbsp; <a href="https://docs.puter.com" target="_blank">Docs</a></span>
+    <span>&nbsp;·&nbsp; <a href="https://github.com/thdreams0/AI-With-Puter" target="_blank">GitHub</a></span>
+    <div class="status-pill" id="statusPill" style="display:inline-flex;">
+      <div class="status-dot loading" id="statusDot"></div>
+      <span id="statusText">loading…</span>
+    </div>
+  </div>
 </footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let conversations = [{ id: 0, title: 'New chat', messages: [], model: '' }];
-let activeConv = 0;
+let conversations = [];
+let activeConv = -1;
 let streaming = true;
 let isGenerating = false;
 let convCounter = 0;
-let pendingImages = []; // { dataUrl, base64, mimeType }
 let currentTab = 'chat';
 let puterReady = false;
 
-// Code editor state
-let codeFiles = {
-  'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>My App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Hello World</h1>\n  <script src="script.js"><\/script>\n</body>\n</html>',
-  'style.css': 'body {\n  font-family: sans-serif;\n  background: #f5f5f5;\n  margin: 0;\n  padding: 2rem;\n}\n\nh1 {\n  color: #333;\n}',
-  'script.js': 'console.log("Hello from script.js");'
-};
-let activeCodeFile = 'index.html';
+// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+const SETTINGS_DEFAULTS = { temperature: 0.7, max_tokens: 4096, top_p: 0.9, frequency_penalty: 0, presence_penalty: 0, system_prompt: '' };
+let appSettings = { ...SETTINGS_DEFAULTS };
+const SETTINGS_FS_PATH = 'puterai-studio/settings.json';
+
+async function loadSettings() {
+  const p = getPuter();
+  let saved = null;
+  if (p) {
+    try { const f = await p.fs.read(SETTINGS_FS_PATH); if (f) saved = await f.text(); } catch (e) {}
+  }
+  if (!saved) { try { saved = localStorage.getItem('ai-puter-settings'); } catch (e) {} }
+  if (saved) {
+    try { appSettings = { ...SETTINGS_DEFAULTS, ...JSON.parse(saved) }; } catch (e) {}
+  }
+  applySettingsToUI();
+}
+
+function applySettingsToUI() {
+  const els = ['tempSlider', 'maxtokSlider', 'toppSlider', 'freqSlider', 'presSlider'];
+  const keys = ['temperature', 'max_tokens', 'top_p', 'frequency_penalty', 'presence_penalty'];
+  els.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.value = appSettings[keys[i]];
+  });
+  const sysEl = document.getElementById('sysPromptInput');
+  if (sysEl) sysEl.value = appSettings.system_prompt || '';
+  updateSettingsDisplay();
+}
+
+async function saveSettings() {
+  const json = JSON.stringify(appSettings);
+  try { localStorage.setItem('ai-puter-settings', json); } catch (e) {}
+  const p = getPuter();
+  if (p) {
+    try { await p.fs.write(SETTINGS_FS_PATH, json, { createMissingParents: true }); } catch (e) { console.warn('Settings FS save failed:', e); }
+  }
+}
+
+function updateSettingsDisplay() {
+  const vals = {
+    tempSlider: 'tempValue', maxtokSlider: 'maxtokValue', toppSlider: 'toppValue',
+    freqSlider: 'freqValue', presSlider: 'presValue'
+  };
+  const keys = { tempSlider: 'temperature', maxtokSlider: 'max_tokens', toppSlider: 'top_p',
+    freqSlider: 'frequency_penalty', presSlider: 'presence_penalty' };
+  Object.entries(vals).forEach(([sliderId, displayId]) => {
+    const slider = document.getElementById(sliderId);
+    const display = document.getElementById(displayId);
+    if (slider && display) {
+      display.textContent = slider.value;
+      appSettings[keys[sliderId]] = parseFloat(slider.value);
+    }
+  });
+  saveSettings();
+}
+
+function onSysPromptChange() {
+  const el = document.getElementById('sysPromptInput');
+  appSettings.system_prompt = el ? el.value : '';
+  saveSettings();
+}
+
+async function resetSettings() {
+  appSettings = { ...SETTINGS_DEFAULTS };
+  await saveSettings();
+  applySettingsToUI();
+  showToast('Settings reset to defaults');
+}
+
+loadSettings();
 
 // Model capability map (extended)
 const MODEL_CAPS = {
@@ -1764,9 +1667,13 @@ const MODEL_GROUPS = [
   ]},
 ];
 
+// Default model
+function getDefaultModel() {
+  return 'gemini-2.0-flash';
+}
+const DEFAULT_MODEL = getDefaultModel();
+
 // ─── DOM REFS ────────────────────────────────────────────────────────────────
-const modelSelect    = document.getElementById('modelSelect');
-const systemPrompt   = document.getElementById('systemPrompt');
 const inputMsg       = document.getElementById('inputMsg');
 const sendBtn        = document.getElementById('sendBtn');
 const messagesContainer = document.getElementById('messagesContainer');
@@ -1775,40 +1682,70 @@ const topbarTitle    = document.getElementById('topbarTitle');
 const topbarModel    = document.getElementById('topbarModel');
 const streamToggle   = document.getElementById('streamToggle');
 const charCount      = document.getElementById('charCount');
-const imgUploadBtn   = document.getElementById('imgUploadBtn');
-const inputModelName = document.getElementById('inputModelName');
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-function buildModelSelect() {
-  modelSelect.innerHTML = '';
-  MODEL_GROUPS.forEach(g => {
-    const grp = document.createElement('optgroup');
-    grp.label = g.label;
-    g.models.forEach(m => {
-      const cap = MODEL_CAPS[m.id] || {};
-      const opt = document.createElement('option');
-      opt.value = m.id;
-      const multi = cap.multiplier ? ` [${cap.multiplier}]` : '';
-      opt.textContent = m.name + multi;
-      if (m.id === 'claude-sonnet-4-5') opt.selected = true;
-      grp.appendChild(opt);
-    });
-    modelSelect.appendChild(grp);
-  });
+// ─── GREETING ─────────────────────────────────────────────────────────────────
+function setGreeting() {
+  const h = new Date().getHours();
+  let greeting, sub;
+  if (h < 12) { greeting = 'Good morning'; sub = 'How can I help you start your day?'; }
+  else if (h < 18) { greeting = 'Good afternoon'; sub = 'What can I help you with this afternoon?'; }
+  else { greeting = 'Good evening'; sub = 'How can I help you this evening?'; }
+  const el = document.getElementById('greeting');
+  const subEl = document.getElementById('greetingSub');
+  if (el) el.textContent = greeting;
+  if (subEl) subEl.textContent = sub;
+}
+setGreeting();
+
+function useSuggestion(text) {
+  inputMsg.value = text;
+  charCount.textContent = text.length;
+  inputMsg.style.height = 'auto';
+  inputMsg.style.height = Math.min(inputMsg.scrollHeight, 180) + 'px';
+  inputMsg.focus();
+  sendMessage();
 }
 
-buildModelSelect();
-conversations[0].model = modelSelect.value;
-document.getElementById('convModel_0').textContent = modelSelect.value;
-topbarModel.textContent = modelSelect.value;
-inputModelName.textContent = shortModelName(modelSelect.value);
-updateCapBadges(modelSelect.value);
+// ─── THEME ────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const icon = document.getElementById('themeIcon');
+  const isLight = document.body.classList.contains('light');
+  icon.innerHTML = isLight
+    ? '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  localStorage.setItem('ai-puter-theme', isLight ? 'light' : 'dark');
+}
+
+(function() {
+  if (localStorage.getItem('ai-puter-theme') === 'light') {
+    document.body.classList.add('light');
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  }
+})();
+
+// Suppress Puter clipboard errors
+const origConsoleError = console.error;
+console.error = function() {
+  const args = Array.from(arguments);
+  if (args.some(a => typeof a === 'string' && a.includes('Cannot read "clipboard"'))) return;
+  return origConsoleError.apply(console, args);
+};
+window.addEventListener('unhandledrejection', function(e) {
+  if (e.reason && e.reason.message && e.reason.message.includes('clipboard')) {
+    e.preventDefault();
+  }
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+topbarTitle.textContent = 'AI With Puter';
 
 // File protocol warning
 if (location.protocol === 'file:') {
   const w = document.createElement('div');
   w.className = 'file-warning';
-  w.innerHTML = '<strong>Running from a local file may break Puter auth.</strong> Serve via <code>python3 -m http.server</code> and open <code>http://localhost:8000</code>.';
+  w.innerHTML = '<strong>Running from a local file may break Puter auth.</strong> Serve via <code>python3 -m http.server</code> and open <code>http://localhost:8000</code>. Chats will be saved to your browser until you sign in.';
   document.body.appendChild(w);
 }
 
@@ -1825,10 +1762,9 @@ function waitForPuter(cb, attempts = 0) {
 
 waitForPuter(p => {
   puterReady = true;
-  setStatus('ready', 'puter.js ready');
-  // Try to load chats from FS
+  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
+  setStatus('ready', signedIn ? `signed in${p.user?.username ? ' as ' + p.user.username : ''}` : 'ready — sign in to save chats');
   loadChatsFromFS();
-  // Load models list if Models tab was opened
 });
 
 function setStatus(state, text) {
@@ -1846,36 +1782,15 @@ function switchTab(tab) {
   document.querySelectorAll('.panel-view').forEach(p => p.classList.remove('active'));
   document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 
-  if (tab === 'models' && !document.getElementById('modelsContent').innerHTML.trim()) loadModels();
+  if (tab === 'models') { if (!document.getElementById('modelsContent').innerHTML.trim()) loadModels(); else renderFilteredModels(); }
   if (tab === 'usage') loadUsage();
 }
 
 // ─── MODEL CHANGE ────────────────────────────────────────────────────────────
-function onModelChange() {
-  const m = modelSelect.value;
-  topbarModel.textContent = m;
-  inputModelName.textContent = shortModelName(m);
-  updateCapBadges(m);
-  if (conversations[activeConv]) {
-    conversations[activeConv].model = m;
-    updateConvItem(activeConv, conversations[activeConv].title, m);
-  }
-}
-
 function shortModelName(id) {
   const parts = id.split('/');
   const last = parts[parts.length - 1];
   return last.length > 22 ? last.slice(0, 22) + '…' : last;
-}
-
-function updateCapBadges(modelId) {
-  const cap = MODEL_CAPS[modelId] || {};
-  document.getElementById('capChat').classList.toggle('active', true);
-  document.getElementById('capVision').classList.toggle('active', !!cap.vision);
-  document.getElementById('capImageGen').classList.toggle('active', !!cap.imageGen);
-  document.getElementById('capAudio').classList.toggle('active', !!cap.audio);
-  // Enable/disable image upload button
-  imgUploadBtn.disabled = !cap.vision;
 }
 
 // ─── INPUT HANDLERS ─────────────────────────────────────────────────────────
@@ -1895,60 +1810,48 @@ function toggleStream() {
 }
 
 // ─── IMAGE UPLOAD ─────────────────────────────────────────────────────────
-function handleImageUpload(e) {
-  const files = Array.from(e.target.files);
-  const strip = document.getElementById('imagePreviews');
-  strip.style.display = 'flex';
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const dataUrl = ev.target.result;
-      const base64 = dataUrl.split(',')[1];
-      const mimeType = file.type;
-      pendingImages.push({ dataUrl, base64, mimeType });
-
-      const item = document.createElement('div');
-      item.className = 'image-preview-item';
-      item.innerHTML = `<img src="${dataUrl}"><div class="image-preview-remove" onclick="removePendingImage(this, '${pendingImages.length - 1}')">×</div>`;
-      strip.appendChild(item);
-    };
-    reader.readAsDataURL(file);
-  });
-  e.target.value = '';
-}
-
-function removePendingImage(el, idx) {
-  pendingImages.splice(parseInt(idx), 1);
-  el.parentElement.remove();
-  if (pendingImages.length === 0) document.getElementById('imagePreviews').style.display = 'none';
-}
 
 // ─── SEND MESSAGE ────────────────────────────────────────────────────────────
 async function sendMessage() {
   const text = inputMsg.value.trim();
-  if ((!text && pendingImages.length === 0) || isGenerating) return;
+  if (!text || isGenerating) return;
+
+  // Auto-create conversation if none active
+  if (activeConv === -1) {
+    convCounter++;
+    const id = convCounter;
+    conversations.push({ id, title: 'New chat', messages: [], model: DEFAULT_MODEL });
+    activeConv = conversations.length - 1;
+    const item = document.createElement('div');
+    item.className = 'conv-item';
+    item.id = 'conv_' + activeConv;
+    item.innerHTML = `
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="conv-item-text">
+        <span class="conv-title">New chat</span>
+        <span class="conv-model" id="convModel_${activeConv}">${DEFAULT_MODEL}</span>
+      </div>
+      <div class="conv-delete-btn" onclick="deleteConv(event,${activeConv})" title="Delete">×</div>`;
+    item.addEventListener('click', (e) => { if (!e.target.classList.contains('conv-delete-btn')) switchConv(activeConv); });
+    document.getElementById('convList').appendChild(item);
+    switchConv(activeConv);
+  }
 
   const conv = getConv();
-  const model = conv.model || modelSelect.value;
+  const model = conv.model || DEFAULT_MODEL;
   const cap = MODEL_CAPS[model] || {};
   const puterClient = getPuter();
 
   if (!puterClient) { showToast('Puter.js not loaded.'); return; }
 
-  // Collect images for message
-  const images = [...pendingImages];
-  pendingImages = [];
-  document.getElementById('imagePreviews').innerHTML = '';
-  document.getElementById('imagePreviews').style.display = 'none';
-
-  const userContent = text + (images.length ? ` [${images.length} image(s)]` : '');
+  const userContent = text;
   if (emptyState.parentNode) emptyState.remove();
 
-  conv.messages.push({ role: 'user', content: userContent, time: now(), images });
+  conv.messages.push({ role: 'user', content: userContent, time: now() });
   conv.model = model;
 
   if (conv.title === 'New chat') {
-    conv.title = (text || 'Image message').slice(0, 32) + ((text.length > 32) ? '…' : '');
+    conv.title = text.slice(0, 32) + ((text.length > 32) ? '…' : '');
     topbarTitle.textContent = conv.title;
     updateConvItem(activeConv, conv.title);
   }
@@ -1994,27 +1897,19 @@ async function sendMessage() {
       const history = [];
       for (const m2 of conv.messages) {
         if (m2.role === 'user') {
-          if (m2.images && m2.images.length > 0 && cap.vision) {
-            // Multi-modal content
-            const parts = [];
-            m2.images.forEach(img => {
-              parts.push({ type: 'image_url', image_url: { url: `data:${img.mimeType};base64,${img.base64}` } });
-            });
-            if (m2.content.replace(/ \[\d+ image\(s\)\]$/, '').trim())
-              parts.push({ type: 'text', text: m2.content.replace(/ \[\d+ image\(s\)\]$/, '').trim() });
-            history.push({ role: 'user', content: parts });
-          } else {
-            const cleanText = m2.content.replace(/ \[\d+ image\(s\)\]$/, '').trim() || '(image)';
-            history.push({ role: 'user', content: cleanText });
-          }
+          history.push({ role: 'user', content: m2.content });
         } else {
           history.push({ role: 'assistant', content: m2.content });
         }
       }
 
-      const sys = systemPrompt.value.trim();
       const opts = { model, stream: streaming };
-      if (sys) opts.system = sys;
+      if (appSettings.temperature !== undefined) opts.temperature = appSettings.temperature;
+      if (appSettings.max_tokens) opts.max_tokens = appSettings.max_tokens;
+      if (appSettings.top_p !== undefined) opts.top_p = appSettings.top_p;
+      if (appSettings.frequency_penalty) opts.frequency_penalty = appSettings.frequency_penalty;
+      if (appSettings.presence_penalty) opts.presence_penalty = appSettings.presence_penalty;
+      if (appSettings.system_prompt) opts.system = appSettings.system_prompt;
 
       if (streaming) {
         const response = await puterClient.ai.chat(history, opts);
@@ -2099,7 +1994,7 @@ function getConv() { return conversations[activeConv]; }
 function newChat() {
   convCounter++;
   const id = convCounter;
-  const model = modelSelect.value;
+  const model = DEFAULT_MODEL;
   conversations.push({ id, title: 'New chat', messages: [], model });
   const idx = conversations.length - 1;
   activeConv = idx;
@@ -2126,24 +2021,25 @@ function switchConv(idx) {
   activeConv = idx;
   const conv = getConv();
   topbarTitle.textContent = conv.title;
-  topbarModel.textContent = conv.model || modelSelect.value;
-  if (conv.model) { modelSelect.value = conv.model; updateCapBadges(conv.model); inputModelName.textContent = shortModelName(conv.model); }
+  topbarModel.textContent = conv.model || DEFAULT_MODEL;
   renderMessages();
 }
 
 function deleteConv(event, idx) {
   event.stopPropagation();
-  if (conversations.length === 1) {
-    clearChat();
-    return;
-  }
-  // Remove from Puter FS
   deleteConvFromFS(idx);
   conversations.splice(idx, 1);
   const el = document.getElementById('conv_' + idx);
   if (el) el.remove();
-  // Re-index remaining items
-  // Simple: reset list
+  if (conversations.length === 0) {
+    activeConv = -1;
+    topbarTitle.textContent = 'AI With Puter';
+    topbarModel.textContent = '—';
+    messagesContainer.innerHTML = '';
+    messagesContainer.appendChild(emptyState);
+    document.getElementById('convList').innerHTML = '';
+    return;
+  }
   rebuildConvList();
   activeConv = 0;
   switchConv(0);
@@ -2197,8 +2093,9 @@ function copyConversation() {
 
 // ─── RENDER MESSAGES ─────────────────────────────────────────────────────────
 function renderMessages() {
-  const conv = getConv();
   messagesContainer.innerHTML = '';
+  if (activeConv === -1 || !conversations[activeConv]) { messagesContainer.appendChild(emptyState); return; }
+  const conv = getConv();
   if (!conv.messages.length) { messagesContainer.appendChild(emptyState); return; }
   conv.messages.forEach((msg, i) => messagesContainer.appendChild(createMsgEl(msg, i)));
   scrollToBottom();
@@ -2223,21 +2120,8 @@ function createMsgEl(msg, idx) {
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
 
-  // Show images if any
-  if (msg.images && msg.images.length > 0) {
-    const imgStrip = document.createElement('div');
-    imgStrip.className = 'gen-image-container';
-    msg.images.forEach(img => {
-      const imgEl = document.createElement('img');
-      imgEl.src = img.dataUrl;
-      imgEl.style.maxWidth = '120px';
-      imgStrip.appendChild(imgEl);
-    });
-    bubble.appendChild(imgStrip);
-  }
-
   const textNode = document.createElement('span');
-  const cleanContent = msg.content.replace(/ \[\d+ image\(s\)\]$/, '').trim();
+  const cleanContent = msg.content;
   textNode.innerHTML = formatContent(cleanContent);
   bubble.appendChild(textNode);
 
@@ -2281,38 +2165,49 @@ function now() {
 
 // ─── PERSISTENT STORAGE ──────────────────────────────────────────────────────
 const FS_PATH = 'puterai-studio/chats.json';
-const FS_CODE_PATH = 'puterai-studio/code-project.json';
 
 async function saveChatsToFS() {
+  const data = conversations.map(c => ({
+    ...c,
+    messages: c.messages.map(m => ({ ...m, images: undefined }))
+  }));
+  const json = JSON.stringify(data);
+  // Fallback to localStorage
+  try { localStorage.setItem('ai-puter-chats', json); } catch (e) {}
   const p = getPuter();
   if (!p) return;
   try {
-    // Strip images (base64) from saved data to keep file small
-    const data = conversations.map(c => ({
-      ...c,
-      messages: c.messages.map(m => ({ ...m, images: undefined }))
-    }));
-    await p.fs.write(FS_PATH, JSON.stringify(data), { createMissingParents: true });
+    await p.fs.write(FS_PATH, json, { createMissingParents: true });
   } catch (e) { console.warn('FS save failed:', e); }
 }
 
 async function loadChatsFromFS() {
   const p = getPuter();
   if (!p) return;
+  let data = null;
+  // Try Puter FS first
   try {
     const file = await p.fs.read(FS_PATH);
-    if (!file) return;
-    const text = await file.text();
-    const data = JSON.parse(text);
-    if (Array.isArray(data) && data.length > 0) {
-      conversations = data.map(c => ({ ...c, messages: c.messages || [] }));
-      convCounter = conversations.reduce((max, c) => Math.max(max, c.id || 0), 0);
-      activeConv = 0;
-      rebuildConvList();
-      switchConv(0);
-      showToast('Chats restored from Puter FS');
+    if (file) {
+      const text = await file.text();
+      data = JSON.parse(text);
     }
-  } catch (e) { /* no saved chats yet */ }
+  } catch (e) { /* try localStorage */ }
+  // Fallback to localStorage
+  if (!data) {
+    try {
+      const local = localStorage.getItem('ai-puter-chats');
+      if (local) data = JSON.parse(local);
+    } catch (e) {}
+  }
+  if (Array.isArray(data) && data.length > 0) {
+    conversations = data.map(c => ({ ...c, messages: c.messages || [] }));
+    convCounter = conversations.reduce((max, c) => Math.max(max, c.id || 0), 0);
+    activeConv = 0;
+    rebuildConvList();
+    switchConv(0);
+    showToast('Chats restored');
+  }
 }
 
 async function deleteConvFromFS(idx) {
@@ -2320,20 +2215,8 @@ async function deleteConvFromFS(idx) {
   await saveChatsToFS();
 }
 
-// Code file FS
-async function saveCodeFiles() {
-  const p = getPuter();
-  if (!p) { showToast('Puter not available'); return; }
-  // Save active file first
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-  try {
-    await p.fs.write(FS_CODE_PATH, JSON.stringify(codeFiles), { createMissingParents: true });
-    showToast('Project saved to Puter FS');
-    setCodeStatus('ready', 'Saved');
-  } catch (e) { showToast('Save failed: ' + e.message); }
-}
+let allModelData = [];
 
-// ─── MODELS PANEL ────────────────────────────────────────────────────────────
 async function loadModels() {
   const loading = document.getElementById('modelsLoading');
   const content = document.getElementById('modelsContent');
@@ -2358,28 +2241,24 @@ async function loadModels() {
   loading.style.display = 'none';
   content.style.display = 'block';
 
-  // If we got dynamic models from Puter, merge/display them
+  allModelData = [];
   if (dynamicModels && Array.isArray(dynamicModels) && dynamicModels.length > 0) {
-    // Group by provider
-    const byProvider = {};
     dynamicModels.forEach(m => {
       const prov = m.provider || m.id?.split('/')[0] || 'Other';
-      if (!byProvider[prov]) byProvider[prov] = [];
-      byProvider[prov].push(m);
-    });
-
-    Object.entries(byProvider).forEach(([prov, models]) => {
-      content.appendChild(buildProviderSection(prov, models.map(m => ({
-        id: m.id || m.name,
-        name: m.name || m.id,
-      }))));
+      allModelData.push({ id: m.id || m.name, name: m.name || m.id, provider: prov });
     });
   } else {
-    // Static fallback
     MODEL_GROUPS.forEach(g => {
-      content.appendChild(buildProviderSection(g.label, g.models));
+      g.models.forEach(m => allModelData.push({ id: m.id, name: m.name, provider: g.label }));
     });
   }
+
+  renderFilteredModels();
+
+  // Populate provider filter with actual providers from data
+  const provFilter = document.getElementById('filterProvider');
+  const uniqueProvs = [...new Set(allModelData.map(m => m.provider))].sort();
+  provFilter.innerHTML = '<option value="">All Providers</option>' + uniqueProvs.map(p => `<option value="${p}">${p}</option>`).join('');
 
   if (providers && Array.isArray(providers) && providers.length > 0) {
     const provSection = document.createElement('div');
@@ -2389,6 +2268,40 @@ async function loadModels() {
         ${providers.map(pr => `<div style="padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;font-family:var(--mono);font-size:11px;color:var(--text2)">${pr.name || pr}</div>`).join('')}
       </div>`;
     content.appendChild(provSection);
+  }
+}
+
+function renderFilteredModels() {
+  const content = document.getElementById('modelsContent');
+  const search = (document.getElementById('modelSearch').value || '').toLowerCase();
+  const providerFilter = document.getElementById('filterProvider').value;
+  const multFilter = document.getElementById('filterMultiplier').value;
+
+  let filtered = allModelData.filter(m => {
+    if (search && !m.name.toLowerCase().includes(search) && !m.id.toLowerCase().includes(search)) return false;
+    if (providerFilter && m.provider !== providerFilter) return false;
+    if (multFilter) {
+      const cap = MODEL_CAPS[m.id] || {};
+      const mul = String(cap.multiplier || '').replace('×', '');
+      if (mul !== multFilter) return false;
+    }
+    return true;
+  });
+
+  // Group by provider
+  const byProvider = {};
+  filtered.forEach(m => {
+    if (!byProvider[m.provider]) byProvider[m.provider] = [];
+    byProvider[m.provider].push(m);
+  });
+
+  content.innerHTML = '';
+  Object.entries(byProvider).forEach(([prov, models]) => {
+    content.appendChild(buildProviderSection(prov, models));
+  });
+
+  if (filtered.length === 0) {
+    content.innerHTML = '<div class="loading-text" style="margin-top:20px;color:var(--text3);justify-content:center;">No models match your filters.</div>';
   }
 }
 
@@ -2402,12 +2315,12 @@ function buildProviderSection(label, models) {
     </div>
     <div class="models-grid" id="grid_${label.replace(/\s/g,'_')}"></div>`;
   const grid = sec.querySelector('.models-grid');
-  const currentModel = modelSelect.value;
+  const currentModel = DEFAULT_MODEL;
 
   models.forEach(m => {
     const cap = MODEL_CAPS[m.id] || {};
     const card = document.createElement('div');
-    card.className = 'model-card' + (m.id === currentModel ? ' selected' : '');
+    card.className = 'model-card' + (m.id === DEFAULT_MODEL ? ' selected' : '');
     const caps = [];
     if (cap.vision) caps.push('<span class="cap-badge vision active">vision</span>');
     if (cap.imageGen) caps.push('<span class="cap-badge image-gen active">img-gen</span>');
@@ -2415,7 +2328,7 @@ function buildProviderSection(label, models) {
 
     card.innerHTML = `
       <div class="model-card-header">
-        <span class="model-card-name">${escapeHtml(m.name)}</span>
+        <span class="model-card-name">${escapeHtml(m.name)}${m.id === DEFAULT_MODEL ? ' <span style="font-size:9px;font-family:var(--mono);color:var(--green);background:var(--green-dim);border:1px solid rgba(122,184,122,0.2);padding:1px 5px;border-radius:4px;vertical-align:middle;">default</span>' : ''}</span>
         ${cap.multiplier ? `<span class="model-card-multiplier">${cap.multiplier}</span>` : ''}
       </div>
       <div class="model-card-id">${escapeHtml(m.id)}</div>
@@ -2428,8 +2341,11 @@ function buildProviderSection(label, models) {
 }
 
 function selectModel(id) {
-  modelSelect.value = id;
-  onModelChange();
+  if (conversations[activeConv]) {
+    conversations[activeConv].model = id;
+    updateConvItem(activeConv, conversations[activeConv].title, id);
+  }
+  topbarModel.textContent = id;
   switchTab('chat');
   showToast('Model set to ' + id);
 }
@@ -2449,50 +2365,150 @@ async function loadUsage() {
     return;
   }
 
+  loader.style.display = 'none';
+
+  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
+  const username = p.user?.username || '';
+
+  // Account info
+  const accountSection = document.createElement('div');
+  accountSection.innerHTML = `
+    <div class="usage-section-title">Account</div>
+    <div class="usage-grid">
+      <div class="usage-card">
+        <div class="usage-card-label">Status</div>
+        <div class="usage-card-value ${signedIn ? 'green' : 'orange'}">${signedIn ? 'Signed In' : 'Not Signed In'}</div>
+        <div class="usage-card-sub">${signedIn ? (username ? 'Logged in as ' + username : 'Authenticated with Puter') : 'Sign in to sync across devices'}</div>
+      </div>
+    </div>`;
+  content.appendChild(accountSection);
+
+  // Fetch usage data from Puter
   let monthly = null;
   let detailed = null;
+  let diskUsage = null;
 
   try {
     if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
   } catch (e) { console.warn('getMonthlyUsage:', e); }
-
   try {
     if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
   } catch (e) { console.warn('getDetailedAppUsage:', e); }
+  try {
+    if (typeof p.fs?.usage === 'function') diskUsage = await p.fs.usage();
+    else if (typeof p.fs?.diskUsage === 'function') diskUsage = await p.fs.diskUsage();
+  } catch (e) { console.warn('diskUsage:', e); }
 
-  loader.style.display = 'none';
-
-  if (!monthly && !detailed) {
-    content.innerHTML = `
-      <div class="loading-text" style="color:var(--text3)">
-        Usage API not available. Either not signed in, or API not supported in this Puter version.<br><br>
-        Local session stats are shown below.
+  // Storage - try detailed first, fallback to fs.usage
+  let storageUsed = null, storageTotal = null;
+  if (detailed && typeof detailed === 'object') {
+    storageUsed = detailed.storage_used ?? detailed.total_storage ?? detailed.disk_used ?? null;
+    storageTotal = detailed.storage_limit ?? detailed.storage_capacity ?? detailed.disk_limit ?? null;
+  }
+  if (storageUsed === null && diskUsage) {
+    storageUsed = diskUsage.used ?? diskUsage.size ?? 0;
+    storageTotal = diskUsage.capacity ?? diskUsage.total ?? 1;
+  }
+  if (storageUsed !== null) {
+    const usedBytes = parseInt(storageUsed);
+    const totalBytes = parseInt(storageTotal || 1);
+    const pct = Math.min(100, Math.round((usedBytes / totalBytes) * 100));
+    const usedMB = (usedBytes / 1048576).toFixed(1);
+    const totalMB = (totalBytes / 1048576).toFixed(1);
+    const storageSection = document.createElement('div');
+    storageSection.innerHTML = `
+      <div class="usage-section-title">Storage</div>
+      <div class="usage-grid">
+        <div class="usage-card">
+          <div class="usage-card-label">Cloud Storage</div>
+          <div class="usage-card-value ${pct > 80 ? 'orange' : 'accent'}">${pct}%</div>
+          <div class="usage-card-sub">${usedMB} MB of ${totalMB} MB</div>
+          <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
+          </div>
+        </div>
       </div>`;
+    content.appendChild(storageSection);
   }
 
-  // Always show local session stats
+  // AI Credits - try detailed first, fallback to monthly
+  const limit = 0.25;
+  let creditUsed = null;
+  if (detailed && typeof detailed === 'object') {
+    creditUsed = parseFloat(detailed.total_credits ?? detailed.credits_used ?? detailed.credit_usage ?? null);
+  }
+  if ((creditUsed === null || isNaN(creditUsed)) && monthly) {
+    if (typeof monthly === 'object') {
+      creditUsed = parseFloat(monthly.used ?? monthly.amount ?? monthly.total_credits ?? null);
+    } else if (typeof monthly === 'number') {
+      creditUsed = monthly;
+    } else if (typeof monthly === 'string') {
+      creditUsed = parseFloat(monthly);
+    }
+  }
+  if (creditUsed !== null && !isNaN(creditUsed)) {
+    const pct = Math.min(100, Math.round((creditUsed / limit) * 100));
+    const remaining = Math.max(0, limit - creditUsed);
+    const creditsSection = document.createElement('div');
+    creditsSection.innerHTML = `
+      <div class="usage-section-title">AI Credits (Free Tier)</div>
+      <div class="usage-grid">
+        <div class="usage-card">
+          <div class="usage-card-label">Monthly Credits</div>
+          <div class="usage-card-value ${pct > 80 ? 'orange' : 'green'}">$${creditUsed.toFixed(3)}</div>
+          <div class="usage-card-sub">$${remaining.toFixed(3)} remaining of $${limit.toFixed(2)} · ${pct}% used</div>
+          <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
+          </div>
+        </div>
+      </div>`;
+    content.appendChild(creditsSection);
+  }
+
+  // Detailed extra info (requests, tokens, models)
+  if (detailed && typeof detailed === 'object') {
+    const extraCards = [];
+    const totalTokens = detailed.totalTokens ?? detailed.tokens ?? 0;
+    const totalRequests = detailed.totalRequests ?? detailed.requests ?? detailed.total_calls ?? 0;
+    const appName = detailed.app ?? detailed.app_name ?? null;
+    const models = detailed.models ?? detailed.by_model ?? null;
+
+    if (totalTokens || totalRequests) {
+      extraCards.push(`
+        <div class="usage-card">
+          <div class="usage-card-label">API Requests</div>
+          <div class="usage-card-value accent">${(totalRequests || 0).toLocaleString()}</div>
+          <div class="usage-card-sub">${(totalTokens || 0).toLocaleString()} tokens</div>
+        </div>`);
+    }
+
+    if (appName) {
+      extraCards.push(`
+        <div class="usage-card">
+          <div class="usage-card-label">App</div>
+          <div class="usage-card-value accent" style="font-size:16px;">${escapeHtml(appName)}</div>
+        </div>`);
+    }
+
+    if (extraCards.length > 0) {
+      const extraSection = document.createElement('div');
+      extraSection.innerHTML = `<div class="usage-section-title">Details</div><div class="usage-grid">${extraCards.join('')}</div>`;
+      content.appendChild(extraSection);
+    }
+  }
+
+  // Session stats
   const localStats = buildLocalStats();
   content.appendChild(localStats);
 
-  if (monthly) {
-    const card = document.createElement('div');
-    card.innerHTML = '<div class="usage-section-title">Monthly Usage (from Puter API)</div>';
-    const pre = document.createElement('pre');
-    pre.style.cssText = 'font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;white-space:pre-wrap;';
-    pre.textContent = JSON.stringify(monthly, null, 2);
-    card.appendChild(pre);
-    content.appendChild(card);
-  }
-
-  if (detailed) {
-    const card = document.createElement('div');
-    card.innerHTML = '<div class="usage-section-title">Detailed App Usage</div>';
-    const pre = document.createElement('pre');
-    pre.style.cssText = 'font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;white-space:pre-wrap;';
-    pre.textContent = JSON.stringify(detailed, null, 2);
-    card.appendChild(pre);
-    content.appendChild(card);
-  }
+  // Puter dashboard link
+  const dashLink = document.createElement('div');
+  dashLink.style.cssText = 'margin-top:20px;text-align:center;';
+  dashLink.innerHTML = `<a href="https://puter.com/dashboard#usage" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;text-decoration:none;transition:all 0.15s;background:var(--bg3);" onmouseover="this.style.borderColor='var(--text3)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+    <svg viewBox="0 0 24 24" stroke-width="1.5" style="width:14px;height:14px;stroke:currentColor;fill:none;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    View full dashboard on Puter
+  </a>`;
+  content.appendChild(dashLink);
 }
 
 function buildLocalStats() {
@@ -2535,169 +2551,6 @@ function buildLocalStats() {
   div.appendChild(table);
   return div;
 }
-
-// ─── CODING ──────────────────────────────────────────────────────────────────
-document.getElementById('codeEditor').value = codeFiles['index.html'];
-
-document.getElementById('codeEditor').addEventListener('input', () => {
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-});
-
-document.getElementById('codeEditor').addEventListener('keydown', e => {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const ta = e.target;
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    ta.value = ta.value.slice(0, start) + '  ' + ta.value.slice(end);
-    ta.selectionStart = ta.selectionEnd = start + 2;
-    codeFiles[activeCodeFile] = ta.value;
-  }
-});
-
-function switchFile(filename) {
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-  activeCodeFile = filename;
-
-  document.querySelectorAll('.file-item').forEach(f => {
-    f.classList.toggle('active', f.dataset.file === filename);
-  });
-
-  document.getElementById('codeEditor').value = codeFiles[filename] || '';
-  document.getElementById('codeFileInfo').textContent = filename;
-
-  // Update code tabs
-  let tab = document.querySelector(`.code-tab[data-file="${filename}"]`);
-  if (!tab) {
-    tab = document.createElement('div');
-    tab.className = 'code-tab';
-    tab.dataset.file = filename;
-    tab.innerHTML = `${escapeHtml(filename)}<span class="code-tab-close" onclick="closeCodeTab(event,'${filename}')">×</span>`;
-    tab.onclick = () => switchFile(filename);
-    document.getElementById('codeTabs').appendChild(tab);
-  }
-  document.querySelectorAll('.code-tab').forEach(t => t.classList.toggle('active', t.dataset.file === filename));
-}
-
-function closeCodeTab(event, filename) {
-  event.stopPropagation();
-  const tab = document.querySelector(`.code-tab[data-file="${filename}"]`);
-  if (tab) tab.remove();
-  if (activeCodeFile === filename) {
-    const remaining = document.querySelectorAll('.code-tab');
-    if (remaining.length > 0) switchFile(remaining[0].dataset.file);
-  }
-}
-
-function newCodeFile() {
-  const name = prompt('File name (e.g. utils.js):');
-  if (!name) return;
-  codeFiles[name] = '';
-  const item = document.createElement('div');
-  item.className = 'file-item';
-  item.dataset.file = name;
-  item.innerHTML = `<svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${escapeHtml(name)}`;
-  item.onclick = () => switchFile(name);
-  document.getElementById('fileList').appendChild(item);
-  switchFile(name);
-}
-
-function runPreview() {
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-  const html = codeFiles['index.html'] || '';
-  const css  = codeFiles['style.css']  || '';
-  const js   = codeFiles['script.js']  || '';
-
-  let combined = html;
-  if (!combined.includes('<style>') && css) {
-    combined = combined.replace('</head>', `<style>${css}</style></head>`);
-  }
-  if (!combined.includes('<script') && js) {
-    combined = combined.replace('</body>', `<script>${js}<\/script></body>`);
-  }
-
-  const iframe = document.getElementById('previewFrame');
-  iframe.srcdoc = combined;
-  setCodeStatus('ready', 'Preview updated');
-}
-
-function setCodeStatus(state, text) {
-  const dot = document.getElementById('codeStatusDot');
-  dot.style.background = state === 'ready' ? 'var(--green)' : state === 'loading' ? 'var(--yellow)' : 'var(--red)';
-  dot.style.boxShadow = `0 0 5px ${state === 'ready' ? 'var(--green)' : state === 'loading' ? 'var(--yellow)' : 'var(--red)'}`;
-  document.getElementById('codeStatusText').textContent = text;
-}
-
-// Code prompt input auto-resize
-document.getElementById('codePromptInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); askCodeAI(); }
-});
-
-async function askCodeAI() {
-  const prompt = document.getElementById('codePromptInput').value.trim();
-  if (!prompt) return;
-
-  const p = getPuter();
-  if (!p) { showToast('Puter.js not available'); return; }
-
-  const btn = document.getElementById('codeAskBtn');
-  btn.disabled = true;
-  btn.textContent = '…';
-  setCodeStatus('loading', 'AI thinking…');
-
-  const currentCode = document.getElementById('codeEditor').value;
-  const sys = `You are an expert web developer assistant. The user is working on a file named "${activeCodeFile}". When asked to modify code, respond ONLY with the complete updated file content, no explanations, no markdown fences, just the raw code.`;
-
-  const userMsg = `Current file (${activeCodeFile}):\n\`\`\`\n${currentCode}\n\`\`\`\n\nRequest: ${prompt}`;
-
-  try {
-    const model = modelSelect.value;
-    const resp = await p.ai.chat([{ role: 'user', content: userMsg }], {
-      model,
-      system: sys,
-    });
-    const newCode = extractText(resp);
-    // Strip possible markdown fences
-    const clean = newCode.replace(/^```[\w]*\n?/, '').replace(/\n?```$/, '').trim();
-    codeFiles[activeCodeFile] = clean;
-    document.getElementById('codeEditor').value = clean;
-    setCodeStatus('ready', 'AI updated the code');
-    showToast('Code updated by AI');
-    document.getElementById('codePromptInput').value = '';
-    runPreview();
-  } catch (e) {
-    showToast('AI error: ' + e.message);
-    setCodeStatus('offline', 'Error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Ask AI';
-  }
-}
-
-// Resizer for code split pane
-(function() {
-  const resizer = document.getElementById('codeResizer');
-  let isResizing = false;
-  resizer.addEventListener('mousedown', e => {
-    isResizing = true;
-    document.body.style.userSelect = 'none';
-  });
-  document.addEventListener('mousemove', e => {
-    if (!isResizing) return;
-    const pane = document.getElementById('codePreviewPane');
-    const container = pane.parentElement;
-    const rect = container.getBoundingClientRect();
-    const newWidth = rect.right - e.clientX;
-    if (newWidth > 150 && newWidth < rect.width - 200) {
-      pane.style.width = newWidth + 'px';
-      pane.style.minWidth = 'unset';
-    }
-  });
-  document.addEventListener('mouseup', () => {
-    isResizing = false;
-    document.body.style.userSelect = '';
-  });
-})();
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
 function showToast(msg) {
