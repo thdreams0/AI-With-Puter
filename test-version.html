@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI With Puter</title>
+<link rel="icon" type="image/jpeg" href="favicon.jpg">
+<script>window.puter = window.puter || {}; window.puter.disableClipboard = true;</script>
 <script src="https://js.puter.com/v2/" onerror="console.error('Puter.js failed to load.');"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Berkeley+Mono:ital,wght@0,100..700;1,100..700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -740,222 +742,6 @@ body {
 }
 
 /* ─── CODING TAB ─── */
-.coding-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  height: 100%;
-}
-
-.code-sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: var(--bg2);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-sidebar-header {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.file-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 5px 6px;
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-size: 11.5px;
-  font-family: var(--mono);
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.12s;
-}
-
-.file-item:hover { background: var(--bg3); color: var(--text); }
-.file-item.active { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--user-brd); }
-.file-item svg { width: 12px; height: 12px; stroke: currentColor; fill: none; flex-shrink: 0; }
-
-.code-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  overflow-x: auto;
-  flex-shrink: 0;
-}
-
-.code-tabs::-webkit-scrollbar { height: 2px; }
-.code-tabs::-webkit-scrollbar-thumb { background: var(--border2); }
-
-.code-tab {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-size: 11.5px;
-  font-family: var(--mono);
-  color: var(--text3);
-  cursor: pointer;
-  border-right: 1px solid var(--border);
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: all 0.12s;
-  flex-shrink: 0;
-}
-
-.code-tab:hover { color: var(--text2); background: var(--bg3); }
-.code-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--bg); }
-
-.code-tab-close {
-  width: 14px; height: 14px;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: var(--text3);
-  transition: all 0.12s;
-}
-
-.code-tab-close:hover { background: var(--bg4); color: var(--red); }
-
-.code-editor-area {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
-.code-textarea {
-  flex: 1;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 14px;
-  line-height: 1.65;
-  border: none;
-  resize: none;
-  padding: 16px;
-  tab-size: 2;
-  outline: none;
-  overflow: auto;
-}
-
-.code-preview-pane {
-  width: 45%;
-  min-width: 280px;
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-preview-header {
-  padding: 7px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg2);
-  flex-shrink: 0;
-}
-
-.preview-iframe {
-  flex: 1;
-  border: none;
-  background: white;
-}
-
-.code-bottom-bar {
-  border-top: 1px solid var(--border);
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  background: var(--bg2);
-  flex-shrink: 0;
-}
-
-.code-prompt-row {
-  display: flex;
-  gap: 7px;
-  align-items: flex-end;
-}
-
-.code-prompt-input {
-  flex: 1;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 12px;
-  padding: 7px 10px;
-  border-radius: 7px;
-  resize: none;
-  min-height: 34px;
-  max-height: 100px;
-  overflow-y: auto;
-  transition: border-color 0.15s;
-}
-
-.code-prompt-input:focus { outline: none; border-color: var(--accent); }
-.code-prompt-input::placeholder { color: var(--text3); }
-
-.code-action-btn {
-  padding: 7px 14px;
-  border-radius: 7px;
-  background: var(--bg5);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.code-action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-.code-action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-.code-status-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text3);
-}
-
-.code-status-item { display: flex; align-items: center; gap: 4px; }
 
 /* ─── MODELS TAB ─── */
 .models-panel {
@@ -1326,17 +1112,6 @@ body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Splitter */
-.resizer {
-  width: 4px;
-  background: var(--border);
-  cursor: col-resize;
-  flex-shrink: 0;
-  transition: background 0.12s;
-}
-
-.resizer:hover { background: var(--accent); }
-
 /* Image gen result */
 .gen-image-container {
   display: flex;
@@ -1393,7 +1168,64 @@ body.light {
 
 body.light .file-warning { background: rgba(200,150,50,0.15); color: #5c4a1a; border-color: rgba(200,150,50,0.25); }
 body.light .file-warning strong { color: #3c2a0a; }
-body.light .preview-iframe { background: white; }
+
+/* ─── RESPONSIVE / MOBILE ─── */
+@media (max-width: 768px) {
+  .sidebar { width: 100% !important; min-width: unset !important; max-height: 48px; overflow: hidden; flex-direction: row; align-items: center; padding: 0 10px; border-right: none; border-bottom: 1px solid var(--border); }
+  .sidebar .logo-area { margin-bottom: 0 !important; min-width: unset; gap: 8px; }
+  .sidebar .logo-mark { width: 28px; height: 28px; }
+  .sidebar .logo-name { font-size: 13px; }
+  .sidebar .sidebar-nav-col { flex-direction: row; margin-bottom: 0 !important; gap: 2px; }
+  .sidebar .tab-btn { padding: 6px 10px; font-size: 12px; width: auto !important; }
+  .sidebar .tab-btn svg { width: 14px; height: 14px; }
+  .sidebar > div:first-child { display: flex; align-items: center; gap: 8px; border-bottom: none; padding: 0 !important; flex: 1; }
+  .sidebar .sidebar-section,
+  .sidebar .conv-list,
+  .sidebar .new-chat-btn,
+  .sidebar #statusPill,
+  .sidebar > div:not(:first-child) { display: none !important; }
+
+  .main-panel { height: calc(100vh - 48px); }
+
+  .app-body { flex-direction: column; }
+
+  .chat-title { font-size: 13px; max-width: 140px; }
+  .chat-model-badge { font-size: 9px; padding: 2px 6px; }
+  .icon-btn { width: 30px; height: 30px; }
+  .icon-btn svg { width: 14px; height: 14px; }
+
+  .messages { padding: 12px 10px; gap: 12px; }
+  .msg-row { max-width: 100%; }
+  .msg-bubble { font-size: 14px; padding: 10px 12px; }
+  .msg-avatar { width: 26px; height: 26px; font-size: 8px; }
+
+  .input-area { padding: 8px 10px 12px; }
+  .input-textarea { font-size: 14px; padding: 8px 10px; }
+  .input-bottom-row { padding: 4px 8px 6px; }
+  .stream-toggle { font-size: 10px; }
+
+  .empty-title { font-size: 18px; }
+  .empty-sub { font-size: 13px; }
+  .suggestion-chip { padding: 8px 14px; font-size: 12px; }
+
+  .models-grid { grid-template-columns: 1fr !important; }
+  .usage-grid { grid-template-columns: 1fr !important; }
+  .usage-header h2 { font-size: 16px; }
+  .models-header h2 { font-size: 16px; }
+
+  .chat-topbar { padding: 8px 12px; }
+  .topbar-global { padding: 0 10px; }
+
+  .puter-footer { font-size: 9px; padding: 4px 8px; }
+  .puter-footer > div { flex-wrap: wrap; gap: 6px; }
+
+  .models-panel { padding: 14px 12px; }
+  .usage-panel { padding: 14px 12px; }
+
+  .code-sidebar { width: 160px; min-width: 160px; }
+  .code-preview-pane { min-width: 200px; }
+  .code-textarea { font-size: 12px; padding: 10px; }
+}
 </style>
 </head>
 <body>
@@ -1403,19 +1235,15 @@ body.light .preview-iframe { background: white; }
   <aside class="sidebar">
     <div style="padding: 18px 12px 0 12px; border-bottom: 1px solid var(--border);">
       <div class="logo-area" style="margin-bottom: 18px; justify-content: flex-start;">
-        <div class="logo-mark" id="logoMark">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <div class="logo-mark" id="logoMark" style="overflow:hidden;">
+          <img src="favicon.jpg" alt="AI With Puter" style="width:100%;height:100%;object-fit:cover;">
         </div>
-        <span class="logo-name">AI With Puter</span>
+        <span class="logo-name" id="sidebarTitle">AI With Puter</span>
       </div>
       <div class="sidebar-nav-col" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
         <button class="tab-btn active" id="tabChat" style="width: 100%; justify-content: flex-start;" onclick="switchTab('chat')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Chat
-        </button>
-        <button class="tab-btn" id="tabCode" style="width: 100%; justify-content: flex-start;" onclick="switchTab('code')">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          Coding
         </button>
         <button class="tab-btn" id="tabModels" style="width: 100%; justify-content: flex-start;" onclick="switchTab('models')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
@@ -1503,85 +1331,6 @@ body.light .preview-iframe { background: white; }
                 <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                   <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CODING -->
-    <div class="panel-view" id="panelCode">
-      <div class="coding-layout">
-        <div class="code-sidebar">
-          <div class="code-sidebar-header">
-            Files
-            <button class="input-icon-btn" title="New file" onclick="newCodeFile()" style="width:20px;height:20px">
-              <svg viewBox="0 0 24 24" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-          </div>
-          <div class="file-list" id="fileList">
-            <div class="file-item active" data-file="index.html" onclick="switchFile('index.html')">
-              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              index.html
-            </div>
-            <div class="file-item" data-file="style.css" onclick="switchFile('style.css')">
-              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              style.css
-            </div>
-            <div class="file-item" data-file="script.js" onclick="switchFile('script.js')">
-              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              script.js
-            </div>
-          </div>
-        </div>
-
-        <div class="code-main">
-          <div class="code-tabs" id="codeTabs">
-            <div class="code-tab active" data-file="index.html">
-              index.html
-              <span class="code-tab-close" onclick="closeCodeTab(event,'index.html')">×</span>
-            </div>
-          </div>
-
-          <div class="code-editor-area">
-            <textarea class="code-textarea" id="codeEditor" spellcheck="false" placeholder="// start coding…&#10;// ask the AI below to generate or modify code"></textarea>
-            <div class="resizer" id="codeResizer"></div>
-            <div class="code-preview-pane" id="codePreviewPane">
-              <div class="code-preview-header">
-                Preview
-                <div class="btn-row">
-                  <button class="small-btn" onclick="runPreview()" title="Run preview">
-                    <svg viewBox="0 0 24 24" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Run
-                  </button>
-                  <button class="small-btn" onclick="saveCodeFiles()" title="Save to Puter FS">
-                    <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Save
-                  </button>
-                </div>
-              </div>
-              <iframe class="preview-iframe" id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-            </div>
-          </div>
-
-          <div class="code-bottom-bar">
-            <div class="code-prompt-row">
-              <textarea class="code-prompt-input" id="codePromptInput" placeholder="Ask AI to generate or modify the code… (e.g. 'add a dark mode toggle')" rows="1"></textarea>
-              <button class="code-action-btn" id="codeAskBtn" onclick="askCodeAI()">
-                Ask AI
-              </button>
-              <button class="code-action-btn" style="background:var(--bg4);border:1px solid var(--border2);color:var(--text2);" onclick="runPreview()">
-                Run
-              </button>
-            </div>
-            <div class="code-status-bar" id="codeStatusBar">
-              <div class="code-status-item">
-                <div class="status-dot" id="codeStatusDot" style="background:var(--text3);box-shadow:none;"></div>
-                <span id="codeStatusText">Ready</span>
-              </div>
-              <div class="code-status-item" id="codeFileInfo" style="color:var(--text3)">
-                index.html
               </div>
             </div>
           </div>
@@ -1777,7 +1526,6 @@ let appSettings = { ...SETTINGS_DEFAULTS };
 const SETTINGS_FS_PATH = 'puterai-studio/settings.json';
 
 async function loadSettings() {
-  // Try Puter FS first, fallback to localStorage
   const p = getPuter();
   let saved = null;
   if (p) {
@@ -1843,14 +1591,6 @@ async function resetSettings() {
 }
 
 loadSettings();
-
-// Code editor state
-let codeFiles = {
-  'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>My App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Hello World</h1>\n  <script src="script.js"><\/script>\n</body>\n</html>',
-  'style.css': 'body {\n  font-family: sans-serif;\n  background: #f5f5f5;\n  margin: 0;\n  padding: 2rem;\n}\n\nh1 {\n  color: #333;\n}',
-  'script.js': 'console.log("Hello from script.js");'
-};
-let activeCodeFile = 'index.html';
 
 // Model capability map (extended)
 const MODEL_CAPS = {
@@ -1927,17 +1667,11 @@ const MODEL_GROUPS = [
   ]},
 ];
 
-// Cheapest model helper
-function getCheapestModel() {
-  let cheapest = 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo';
-  let minMul = Infinity;
-  for (const [id, cap] of Object.entries(MODEL_CAPS)) {
-    const mul = parseFloat(String(cap.multiplier || '1').replace('×', ''));
-    if (mul > 0 && mul < minMul) { minMul = mul; cheapest = id; }
-  }
-  return cheapest;
+// Default model
+function getDefaultModel() {
+  return 'gemini-2.0-flash';
 }
-const DEFAULT_MODEL = getCheapestModel();
+const DEFAULT_MODEL = getDefaultModel();
 
 // ─── DOM REFS ────────────────────────────────────────────────────────────────
 const inputMsg       = document.getElementById('inputMsg');
@@ -1991,13 +1725,18 @@ function toggleTheme() {
   }
 })();
 
-// Prevent Puter.js from intercepting paste (causes clipboard errors)
-document.addEventListener('paste', function(e) {
-  // Allow normal paste but stop Puter from handling it
-  if (e.target && (e.target.id === 'inputMsg' || e.target.closest('.input-box'))) {
-    e.stopPropagation();
+// Suppress Puter clipboard errors
+const origConsoleError = console.error;
+console.error = function() {
+  const args = Array.from(arguments);
+  if (args.some(a => typeof a === 'string' && a.includes('Cannot read "clipboard"'))) return;
+  return origConsoleError.apply(console, args);
+};
+window.addEventListener('unhandledrejection', function(e) {
+  if (e.reason && e.reason.message && e.reason.message.includes('clipboard')) {
+    e.preventDefault();
   }
-}, true);
+});
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 topbarTitle.textContent = 'AI With Puter';
@@ -2426,7 +2165,6 @@ function now() {
 
 // ─── PERSISTENT STORAGE ──────────────────────────────────────────────────────
 const FS_PATH = 'puterai-studio/chats.json';
-const FS_CODE_PATH = 'puterai-studio/code-project.json';
 
 async function saveChatsToFS() {
   const data = conversations.map(c => ({
@@ -2477,20 +2215,6 @@ async function deleteConvFromFS(idx) {
   await saveChatsToFS();
 }
 
-// Code file FS
-async function saveCodeFiles() {
-  const p = getPuter();
-  if (!p) { showToast('Puter not available'); return; }
-  // Save active file first
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-  try {
-    await p.fs.write(FS_CODE_PATH, JSON.stringify(codeFiles), { createMissingParents: true });
-    showToast('Project saved to Puter FS');
-    setCodeStatus('ready', 'Saved');
-  } catch (e) { showToast('Save failed: ' + e.message); }
-}
-
-// ─── MODELS PANEL ────────────────────────────────────────────────────────────
 let allModelData = [];
 
 async function loadModels() {
@@ -2604,7 +2328,7 @@ function buildProviderSection(label, models) {
 
     card.innerHTML = `
       <div class="model-card-header">
-        <span class="model-card-name">${escapeHtml(m.name)}</span>
+        <span class="model-card-name">${escapeHtml(m.name)}${m.id === DEFAULT_MODEL ? ' <span style="font-size:9px;font-family:var(--mono);color:var(--green);background:var(--green-dim);border:1px solid rgba(122,184,122,0.2);padding:1px 5px;border-radius:4px;vertical-align:middle;">default</span>' : ''}</span>
         ${cap.multiplier ? `<span class="model-card-multiplier">${cap.multiplier}</span>` : ''}
       </div>
       <div class="model-card-id">${escapeHtml(m.id)}</div>
@@ -2827,169 +2551,6 @@ function buildLocalStats() {
   div.appendChild(table);
   return div;
 }
-
-// ─── CODING ──────────────────────────────────────────────────────────────────
-document.getElementById('codeEditor').value = codeFiles['index.html'];
-
-document.getElementById('codeEditor').addEventListener('input', () => {
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-});
-
-document.getElementById('codeEditor').addEventListener('keydown', e => {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const ta = e.target;
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    ta.value = ta.value.slice(0, start) + '  ' + ta.value.slice(end);
-    ta.selectionStart = ta.selectionEnd = start + 2;
-    codeFiles[activeCodeFile] = ta.value;
-  }
-});
-
-function switchFile(filename) {
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-  activeCodeFile = filename;
-
-  document.querySelectorAll('.file-item').forEach(f => {
-    f.classList.toggle('active', f.dataset.file === filename);
-  });
-
-  document.getElementById('codeEditor').value = codeFiles[filename] || '';
-  document.getElementById('codeFileInfo').textContent = filename;
-
-  // Update code tabs
-  let tab = document.querySelector(`.code-tab[data-file="${filename}"]`);
-  if (!tab) {
-    tab = document.createElement('div');
-    tab.className = 'code-tab';
-    tab.dataset.file = filename;
-    tab.innerHTML = `${escapeHtml(filename)}<span class="code-tab-close" onclick="closeCodeTab(event,'${filename}')">×</span>`;
-    tab.onclick = () => switchFile(filename);
-    document.getElementById('codeTabs').appendChild(tab);
-  }
-  document.querySelectorAll('.code-tab').forEach(t => t.classList.toggle('active', t.dataset.file === filename));
-}
-
-function closeCodeTab(event, filename) {
-  event.stopPropagation();
-  const tab = document.querySelector(`.code-tab[data-file="${filename}"]`);
-  if (tab) tab.remove();
-  if (activeCodeFile === filename) {
-    const remaining = document.querySelectorAll('.code-tab');
-    if (remaining.length > 0) switchFile(remaining[0].dataset.file);
-  }
-}
-
-function newCodeFile() {
-  const name = prompt('File name (e.g. utils.js):');
-  if (!name) return;
-  codeFiles[name] = '';
-  const item = document.createElement('div');
-  item.className = 'file-item';
-  item.dataset.file = name;
-  item.innerHTML = `<svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${escapeHtml(name)}`;
-  item.onclick = () => switchFile(name);
-  document.getElementById('fileList').appendChild(item);
-  switchFile(name);
-}
-
-function runPreview() {
-  codeFiles[activeCodeFile] = document.getElementById('codeEditor').value;
-  const html = codeFiles['index.html'] || '';
-  const css  = codeFiles['style.css']  || '';
-  const js   = codeFiles['script.js']  || '';
-
-  let combined = html;
-  if (!combined.includes('<style>') && css) {
-    combined = combined.replace('</head>', `<style>${css}</style></head>`);
-  }
-  if (!combined.includes('<script') && js) {
-    combined = combined.replace('</body>', `<script>${js}<\/script></body>`);
-  }
-
-  const iframe = document.getElementById('previewFrame');
-  iframe.srcdoc = combined;
-  setCodeStatus('ready', 'Preview updated');
-}
-
-function setCodeStatus(state, text) {
-  const dot = document.getElementById('codeStatusDot');
-  dot.style.background = state === 'ready' ? 'var(--green)' : state === 'loading' ? 'var(--yellow)' : 'var(--red)';
-  dot.style.boxShadow = `0 0 5px ${state === 'ready' ? 'var(--green)' : state === 'loading' ? 'var(--yellow)' : 'var(--red)'}`;
-  document.getElementById('codeStatusText').textContent = text;
-}
-
-// Code prompt input auto-resize
-document.getElementById('codePromptInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); askCodeAI(); }
-});
-
-async function askCodeAI() {
-  const prompt = document.getElementById('codePromptInput').value.trim();
-  if (!prompt) return;
-
-  const p = getPuter();
-  if (!p) { showToast('Puter.js not available'); return; }
-
-  const btn = document.getElementById('codeAskBtn');
-  btn.disabled = true;
-  btn.textContent = '…';
-  setCodeStatus('loading', 'AI thinking…');
-
-  const currentCode = document.getElementById('codeEditor').value;
-  const sys = `You are an expert web developer assistant. The user is working on a file named "${activeCodeFile}". When asked to modify code, respond ONLY with the complete updated file content, no explanations, no markdown fences, just the raw code.`;
-
-  const userMsg = `Current file (${activeCodeFile}):\n\`\`\`\n${currentCode}\n\`\`\`\n\nRequest: ${prompt}`;
-
-  try {
-  const model = DEFAULT_MODEL;
-    const resp = await p.ai.chat([{ role: 'user', content: userMsg }], {
-      model,
-      system: sys,
-    });
-    const newCode = extractText(resp);
-    // Strip possible markdown fences
-    const clean = newCode.replace(/^```[\w]*\n?/, '').replace(/\n?```$/, '').trim();
-    codeFiles[activeCodeFile] = clean;
-    document.getElementById('codeEditor').value = clean;
-    setCodeStatus('ready', 'AI updated the code');
-    showToast('Code updated by AI');
-    document.getElementById('codePromptInput').value = '';
-    runPreview();
-  } catch (e) {
-    showToast('AI error: ' + e.message);
-    setCodeStatus('offline', 'Error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Ask AI';
-  }
-}
-
-// Resizer for code split pane
-(function() {
-  const resizer = document.getElementById('codeResizer');
-  let isResizing = false;
-  resizer.addEventListener('mousedown', e => {
-    isResizing = true;
-    document.body.style.userSelect = 'none';
-  });
-  document.addEventListener('mousemove', e => {
-    if (!isResizing) return;
-    const pane = document.getElementById('codePreviewPane');
-    const container = pane.parentElement;
-    const rect = container.getBoundingClientRect();
-    const newWidth = rect.right - e.clientX;
-    if (newWidth > 150 && newWidth < rect.width - 200) {
-      pane.style.width = newWidth + 'px';
-      pane.style.minWidth = 'unset';
-    }
-  });
-  document.addEventListener('mouseup', () => {
-    isResizing = false;
-    document.body.style.userSelect = '';
-  });
-})();
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
 function showToast(msg) {
