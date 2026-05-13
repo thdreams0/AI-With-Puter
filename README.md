@@ -8,3 +8,5 @@ As I heavely used [Claude](https://claude.ai) the site's gui is based on it
 You can open the AI chat at [AI-With-Puter](https://ai-with-puter.netlify.app/) or at the [Puter.com project](https://puter.com/app/ai-with-puter)
 
 Running from a local file may break [Puter auth](https://docs.puter.com/Auth/). Serve via python3 -m http.server and open http://localhost:8000, or just go to one of the listed link above.
+
+![Contact Me](https://img.shields.io/badge/Contact%20Me-thdreams%40tuta.io-green?style=for-the-badge) ![MIT](https://img.shields.io/badge/MIT-License-red?style=for-the-badge)
