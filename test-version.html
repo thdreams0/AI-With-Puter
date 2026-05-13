@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI With Puter</title>
 <link rel="icon" type="image/jpeg" href="favicon.jpg">
-<script>window.puter = window.puter || {}; window.puter.disableClipboard = true;</script>
 <script src="https://js.puter.com/v2/" onerror="console.error('Puter.js failed to load.');"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Berkeley+Mono:ital,wght@0,100..700;1,100..700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1249,10 +1248,6 @@ body.light .file-warning strong { color: #3c2a0a; }
           <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
           Models
         </button>
-        <button class="tab-btn" id="tabUsage" style="width: 100%; justify-content: flex-start;" onclick="switchTab('usage')">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-          Usage
-        </button>
         <button class="tab-btn" id="tabSettings" style="width: 100%; justify-content: flex-start;" onclick="switchTab('settings')">
           <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           Settings
@@ -1418,6 +1413,8 @@ body.light .file-warning strong { color: #3c2a0a; }
             <textarea id="sysPromptInput" placeholder="You are a helpful assistant…" style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:13px;padding:10px;border-radius:8px;resize:vertical;min-height:80px;outline:none;" oninput="onSysPromptChange()"></textarea>
           </div>
         </div>
+
+        <div id="settingsUsageContent"></div>
 
         <div class="usage-section-title">Generation Parameters</div>
         <div class="usage-grid" style="grid-template-columns:1fr;">
@@ -1783,7 +1780,7 @@ function switchTab(tab) {
   document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 
   if (tab === 'models') { if (!document.getElementById('modelsContent').innerHTML.trim()) loadModels(); else renderFilteredModels(); }
-  if (tab === 'usage') loadUsage();
+  if (tab === 'settings') loadUsage();
 }
 
 // ─── MODEL CHANGE ────────────────────────────────────────────────────────────
@@ -1895,6 +1892,9 @@ async function sendMessage() {
     } else {
       // Build messages for API
       const history = [];
+      if (appSettings.system_prompt) {
+        history.push({ role: 'system', content: appSettings.system_prompt });
+      }
       for (const m2 of conv.messages) {
         if (m2.role === 'user') {
           history.push({ role: 'user', content: m2.content });
@@ -2352,204 +2352,86 @@ function selectModel(id) {
 
 // ─── USAGE PANEL ─────────────────────────────────────────────────────────────
 async function loadUsage() {
-  const content = document.getElementById('usageContent');
-  const loader = document.getElementById('usageLoading');
-  loader.style.display = 'flex';
+  const content = document.getElementById('settingsUsageContent');
+  if (!content) return;
   content.innerHTML = '';
 
   const p = getPuter();
-
   if (!p) {
-    loader.style.display = 'none';
     content.innerHTML = '<div class="loading-text" style="color:var(--red)">Puter.js not available.</div>';
     return;
   }
 
-  loader.style.display = 'none';
-
-  const signedIn = p.auth?.isSignedIn?.() || p.user?.username || false;
-  const username = p.user?.username || '';
-
   // Account info
-  const accountSection = document.createElement('div');
-  accountSection.innerHTML = `
-    <div class="usage-section-title">Account</div>
-    <div class="usage-grid">
-      <div class="usage-card">
-        <div class="usage-card-label">Status</div>
-        <div class="usage-card-value ${signedIn ? 'green' : 'orange'}">${signedIn ? 'Signed In' : 'Not Signed In'}</div>
-        <div class="usage-card-sub">${signedIn ? (username ? 'Logged in as ' + username : 'Authenticated with Puter') : 'Sign in to sync across devices'}</div>
-      </div>
-    </div>`;
-  content.appendChild(accountSection);
+  let user = null;
+  try { if (typeof p.auth?.getUser === 'function') user = await p.auth.getUser(); } catch (e) {}
+  const userSection = document.createElement('div');
+  userSection.innerHTML = '<div class="usage-section-title">Account</div><div class="usage-grid"><div class="usage-card"><div class="usage-card-label">Status</div><div class="usage-card-value ' + (user ? 'green' : 'orange') + '">' + (user ? 'Logged In' : 'Logged Out') + '</div><div class="usage-card-sub">' + (user ? (user.username || 'Authenticated') : 'Sign in to sync chats and view usage') + '</div></div></div>';
+  content.appendChild(userSection);
 
-  // Fetch usage data from Puter
   let monthly = null;
-  let detailed = null;
-  let diskUsage = null;
+  try { if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage(); } catch (e) { console.warn('getMonthlyUsage:', e); }
 
-  try {
-    if (typeof p.auth?.getMonthlyUsage === 'function') monthly = await p.auth.getMonthlyUsage();
-  } catch (e) { console.warn('getMonthlyUsage:', e); }
-  try {
-    if (typeof p.auth?.getDetailedAppUsage === 'function') detailed = await p.auth.getDetailedAppUsage();
-  } catch (e) { console.warn('getDetailedAppUsage:', e); }
-  try {
-    if (typeof p.fs?.usage === 'function') diskUsage = await p.fs.usage();
-    else if (typeof p.fs?.diskUsage === 'function') diskUsage = await p.fs.diskUsage();
-  } catch (e) { console.warn('diskUsage:', e); }
-
-  // Storage - try detailed first, fallback to fs.usage
-  let storageUsed = null, storageTotal = null;
-  if (detailed && typeof detailed === 'object') {
-    storageUsed = detailed.storage_used ?? detailed.total_storage ?? detailed.disk_used ?? null;
-    storageTotal = detailed.storage_limit ?? detailed.storage_capacity ?? detailed.disk_limit ?? null;
-  }
-  if (storageUsed === null && diskUsage) {
-    storageUsed = diskUsage.used ?? diskUsage.size ?? 0;
-    storageTotal = diskUsage.capacity ?? diskUsage.total ?? 1;
-  }
-  if (storageUsed !== null) {
-    const usedBytes = parseInt(storageUsed);
-    const totalBytes = parseInt(storageTotal || 1);
-    const pct = Math.min(100, Math.round((usedBytes / totalBytes) * 100));
-    const usedMB = (usedBytes / 1048576).toFixed(1);
-    const totalMB = (totalBytes / 1048576).toFixed(1);
-    const storageSection = document.createElement('div');
-    storageSection.innerHTML = `
-      <div class="usage-section-title">Storage</div>
-      <div class="usage-grid">
-        <div class="usage-card">
-          <div class="usage-card-label">Cloud Storage</div>
-          <div class="usage-card-value ${pct > 80 ? 'orange' : 'accent'}">${pct}%</div>
-          <div class="usage-card-sub">${usedMB} MB of ${totalMB} MB</div>
-          <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
-          </div>
-        </div>
-      </div>`;
-    content.appendChild(storageSection);
+  if (!monthly) {
+    content.innerHTML += '<div class="loading-text" style="color:var(--text3);justify-content:center;margin-top:20px;">No usage data available yet.</div>';
+    return;
   }
 
-  // AI Credits - try detailed first, fallback to monthly
-  const limit = 0.25;
-  let creditUsed = null;
-  if (detailed && typeof detailed === 'object') {
-    creditUsed = parseFloat(detailed.total_credits ?? detailed.credits_used ?? detailed.credit_usage ?? null);
-  }
-  if ((creditUsed === null || isNaN(creditUsed)) && monthly) {
-    if (typeof monthly === 'object') {
-      creditUsed = parseFloat(monthly.used ?? monthly.amount ?? monthly.total_credits ?? null);
-    } else if (typeof monthly === 'number') {
-      creditUsed = monthly;
-    } else if (typeof monthly === 'string') {
-      creditUsed = parseFloat(monthly);
-    }
-  }
-  if (creditUsed !== null && !isNaN(creditUsed)) {
-    const pct = Math.min(100, Math.round((creditUsed / limit) * 100));
-    const remaining = Math.max(0, limit - creditUsed);
-    const creditsSection = document.createElement('div');
-    creditsSection.innerHTML = `
-      <div class="usage-section-title">AI Credits (Free Tier)</div>
-      <div class="usage-grid">
-        <div class="usage-card">
-          <div class="usage-card-label">Monthly Credits</div>
-          <div class="usage-card-value ${pct > 80 ? 'orange' : 'green'}">$${creditUsed.toFixed(3)}</div>
-          <div class="usage-card-sub">$${remaining.toFixed(3)} remaining of $${limit.toFixed(2)} · ${pct}% used</div>
-          <div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${pct}%;background:${pct > 80 ? 'var(--orange)' : 'var(--green)'};border-radius:3px;transition:width 0.5s;"></div>
-          </div>
-        </div>
-      </div>`;
-    content.appendChild(creditsSection);
-  }
+  const usage = monthly.usage || {};
+  const allowance = monthly.allowanceInfo || {};
+  const totalAllowance = allowance.monthUsageAllowance || 25000000;
+  const remaining = allowance.remaining || 0;
+  const used = Math.max(0, totalAllowance - remaining);
+  const pct = Math.min(100, Math.round((used / totalAllowance) * 100));
 
-  // Detailed extra info (requests, tokens, models)
-  if (detailed && typeof detailed === 'object') {
-    const extraCards = [];
-    const totalTokens = detailed.totalTokens ?? detailed.tokens ?? 0;
-    const totalRequests = detailed.totalRequests ?? detailed.requests ?? detailed.total_calls ?? 0;
-    const appName = detailed.app ?? detailed.app_name ?? null;
-    const models = detailed.models ?? detailed.by_model ?? null;
+  const sec = document.createElement('div');
+  sec.innerHTML = '<div class="usage-section-title">Monthly Allowance</div><div class="usage-grid"><div class="usage-card"><div class="usage-card-label">Credits Used</div><div class="usage-card-value ' + (pct > 80 ? 'orange' : 'green') + '">' + pct + '%</div><div class="usage-card-sub">' + (used / 1000000).toFixed(2) + 'M / ' + (totalAllowance / 1000000).toFixed(2) + 'M · ' + (remaining / 1000000).toFixed(2) + 'M remaining</div><div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:' + (pct > 80 ? 'var(--orange)' : 'var(--green)') + ';border-radius:3px;"></div></div></div></div>';
+  content.appendChild(sec);
 
-    if (totalTokens || totalRequests) {
-      extraCards.push(`
-        <div class="usage-card">
-          <div class="usage-card-label">API Requests</div>
-          <div class="usage-card-value accent">${(totalRequests || 0).toLocaleString()}</div>
-          <div class="usage-card-sub">${(totalTokens || 0).toLocaleString()} tokens</div>
-        </div>`);
-    }
-
-    if (appName) {
-      extraCards.push(`
-        <div class="usage-card">
-          <div class="usage-card-label">App</div>
-          <div class="usage-card-value accent" style="font-size:16px;">${escapeHtml(appName)}</div>
-        </div>`);
-    }
-
-    if (extraCards.length > 0) {
-      const extraSection = document.createElement('div');
-      extraSection.innerHTML = `<div class="usage-section-title">Details</div><div class="usage-grid">${extraCards.join('')}</div>`;
-      content.appendChild(extraSection);
-    }
-  }
-
-  // Session stats
-  const localStats = buildLocalStats();
-  content.appendChild(localStats);
-
-  // Puter dashboard link
-  const dashLink = document.createElement('div');
-  dashLink.style.cssText = 'margin-top:20px;text-align:center;';
-  dashLink.innerHTML = `<a href="https://puter.com/dashboard#usage" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;text-decoration:none;transition:all 0.15s;background:var(--bg3);" onmouseover="this.style.borderColor='var(--text3)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
-    <svg viewBox="0 0 24 24" stroke-width="1.5" style="width:14px;height:14px;stroke:currentColor;fill:none;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    View full dashboard on Puter
-  </a>`;
-  content.appendChild(dashLink);
-}
-
-function buildLocalStats() {
-  const totalMsgs = conversations.reduce((sum, c) => sum + c.messages.length, 0);
-  const aiMsgs = conversations.reduce((sum, c) => sum + c.messages.filter(m => m.role === 'ai').length, 0);
-  const totalWords = conversations.reduce((sum, c) => sum + c.messages.reduce((s2, m) => s2 + m.content.split(/\s+/).length, 0), 0);
-
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <div class="usage-section-title">Session Statistics</div>
-    <div class="usage-grid">
-      <div class="usage-card">
-        <div class="usage-card-label">Total Messages</div>
-        <div class="usage-card-value accent">${totalMsgs}</div>
-        <div class="usage-card-sub">across ${conversations.length} conversation(s)</div>
-      </div>
-      <div class="usage-card">
-        <div class="usage-card-label">AI Responses</div>
-        <div class="usage-card-value green">${aiMsgs}</div>
-        <div class="usage-card-sub">generated this session</div>
-      </div>
-      <div class="usage-card">
-        <div class="usage-card-label">Total Words</div>
-        <div class="usage-card-value">${totalWords.toLocaleString()}</div>
-        <div class="usage-card-sub">~${Math.ceil(totalWords * 1.3).toLocaleString()} tokens est.</div>
-      </div>
-    </div>
-    <div class="usage-section-title">Conversations</div>`;
-
-  const table = document.createElement('table');
-  table.className = 'usage-table';
-  table.innerHTML = `<thead><tr><th>Title</th><th>Model</th><th>Messages</th></tr></thead>`;
-  const tbody = document.createElement('tbody');
-  conversations.forEach(c => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${escapeHtml(c.title)}</td><td><span style="font-family:var(--mono)">${escapeHtml(c.model || '—')}</span></td><td>${c.messages.length}</td>`;
-    tbody.appendChild(tr);
+  const models = {};
+  Object.entries(usage).filter(([k]) => k !== 'total').forEach(([key, val]) => {
+    const parts = key.split(':');
+    const provider = parts[0] || 'other';
+    const modelName = (parts[1] || key).replace(/[_-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    if (!models[provider]) models[provider] = {};
+    if (!models[provider][modelName]) models[provider][modelName] = { cost: 0, count: 0, units: 0 };
+    models[provider][modelName].cost += val.cost || 0;
+    models[provider][modelName].count += val.count || 0;
+    models[provider][modelName].units += val.units || 0;
   });
-  table.appendChild(tbody);
-  div.appendChild(table);
-  return div;
+
+  let modelHtml = '<div class="usage-section-title">Usage by Model</div>';
+  Object.entries(models).forEach(([prov, m]) => {
+    Object.entries(m).forEach(([name, d]) => {
+      const costStr = d.cost >= 1000000 ? (d.cost / 1000000).toFixed(2) + 'M' : d.cost >= 1000 ? (d.cost / 1000).toFixed(1) + 'K' : d.cost.toFixed(0);
+      modelHtml += '<div class="usage-card" style="padding:10px 14px;margin-bottom:4px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:12px;font-family:var(--mono);color:var(--text);">' + escapeHtml(prov) + ' · ' + escapeHtml(name) + '</div><div style="font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:2px;">' + d.count + ' requests · ' + d.units.toLocaleString() + ' units</div></div><span style="font-size:13px;font-family:var(--mono);color:var(--accent);">' + costStr + '</span></div></div>';
+    });
+  });
+  if (usage.total) {
+    const t = usage.total;
+    const ts = t >= 1000000 ? (t / 1000000).toFixed(2) + 'M' : t >= 1000 ? (t / 1000).toFixed(1) + 'K' : t.toFixed(0);
+    modelHtml += '<div class="usage-card" style="padding:10px 14px;margin-top:4px;border-color:var(--border2);"><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;font-family:var(--mono);font-weight:600;color:var(--text);">Total Cost</span><span style="font-size:14px;font-family:var(--mono);color:var(--accent);font-weight:600;">' + ts + '</span></div></div>';
+  }
+  const ms = document.createElement('div');
+  ms.innerHTML = modelHtml;
+  content.appendChild(ms);
+
+  try {
+    const du = await (typeof p.fs?.usage === 'function' ? p.fs.usage() : typeof p.fs?.diskUsage === 'function' ? p.fs.diskUsage() : null);
+    if (du) {
+      const ub = parseInt(du.used || du.size || 0);
+      const tb = parseInt(du.capacity || du.total || 1);
+      const sp = Math.min(100, Math.round((ub / tb) * 100));
+      const ss = document.createElement('div');
+      ss.innerHTML = '<div class="usage-section-title">Storage</div><div class="usage-grid"><div class="usage-card"><div class="usage-card-label">Cloud Storage</div><div class="usage-card-value ' + (sp > 80 ? 'orange' : 'accent') + '">' + sp + '%</div><div class="usage-card-sub">' + (ub / 1048576).toFixed(1) + ' MB of ' + (tb / 1048576).toFixed(1) + ' MB</div><div style="margin-top:10px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;"><div style="height:100%;width:' + sp + '%;background:' + (sp > 80 ? 'var(--orange)' : 'var(--green)') + ';border-radius:3px;"></div></div></div></div>';
+      content.appendChild(ss);
+    }
+  } catch (e) {}
+
+  const dl = document.createElement('div');
+  dl.style.cssText = 'margin-top:20px;text-align:center;';
+  dl.innerHTML = '<a href="https://puter.com/dashboard#usage" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;text-decoration:none;background:var(--bg3);" onmouseover="this.style.borderColor=\'var(--text3)\';this.style.color=\'var(--text)\'" onmouseout="this.style.borderColor=\'var(--border2)\';this.style.color=\'var(--text2)\'"><svg viewBox="0 0 24 24" stroke-width="1.5" style="width:14px;height:14px;stroke:currentColor;fill:none;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View full dashboard on Puter</a>';
+  content.appendChild(dl);
 }
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
